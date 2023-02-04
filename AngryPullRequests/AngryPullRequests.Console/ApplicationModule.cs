@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AngryPullRequests.Application
+namespace AngryPullRequests.Console
 {
     public class ApplicationModule : Module
     {
@@ -14,7 +14,6 @@ namespace AngryPullRequests.Application
         {
             base.Load(builder);
 
-            builder.RegisterModule<InfrastructureModule>();
             builder.RegisterType<RunnerService>().As<IRunnerService>();
             builder.RegisterType<AngryPullRequestsService>().As<IAngryPullRequestsService>();
             builder.RegisterType<PullRequestStateService>().As<IPullRequestStateService>();

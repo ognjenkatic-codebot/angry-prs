@@ -1,4 +1,5 @@
 ﻿using AngryPullRequests.Domain.Models;
+using SlackNet;
 using System;
 using System.Threading.Tasks;
 
@@ -6,11 +7,18 @@ namespace AngryPullRequests.Application.Services
 {
     public class SlackNotifierService : IUserNotifierService
     {
-        public Task Notify(User reviewer, PullRequest pullRequest)
+        private readonly ISlackApiClient slack;
+
+        public SlackNotifierService(ISlackApiClient slack)
+        {
+            this.slack = slack;
+        }
+
+        public async Task Notify(Domain.Models.User reviewer, PullRequest pullRequest)
         {
             Console.WriteLine($"Sending slack message to user {reviewer.Login}");
 
-            return Task.CompletedTask;
+            var nesto = await slack.Users.GetPresence();
         }
     }
 }

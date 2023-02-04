@@ -56,7 +56,7 @@ namespace AngryPullRequests.Application.Services
 
             foreach (var user in requestedReviewers)
             {
-                await userNotifierService.Notify(user);
+                await userNotifierService.Notify(user, pullRequest);
             }
         }
     }

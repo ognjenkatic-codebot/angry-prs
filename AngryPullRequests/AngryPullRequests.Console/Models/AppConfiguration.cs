@@ -11,5 +11,6 @@ namespace AngryPullRequests.Console.Models
     {
         public AngryPullRequestsConfiguration RepoConfiguration { get; set; }
         public RepositoryAccessConfiguration AccessConfiguration { get; set; }
+        public SlackConfiguration SlackConfiguration { get; set; }
     }
 }

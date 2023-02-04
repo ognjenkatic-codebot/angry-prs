@@ -1,5 +1,6 @@
 ﻿using AngryPullRequests.Application;
 using AngryPullRequests.Application.Services;
+using AngryPullRequests.Console;
 using AngryPullRequests.Console.Models;
 using AngryPullRequests.Infrastructure.Models;
 using Autofac;
@@ -17,6 +18,7 @@ var configration = JsonSerializer.Deserialize<AppConfiguration>(configurationTex
 
 var builder = new ContainerBuilder();
 
+builder.RegisterModule(new InfrastructureModule(configration.AccessConfiguration, configration.SlackConfiguration));
 builder.RegisterModule<ApplicationModule>();
 builder.RegisterInstance(configration.RepoConfiguration).SingleInstance();
 builder.RegisterInstance(configration.AccessConfiguration).SingleInstance();
