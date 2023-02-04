@@ -8,6 +8,8 @@ namespace AngryPullRequests.Infrastructure.Services
 {
     public interface IPullRequestService
     {
-        public Task<PullRequest[]> GetOpenPrs(string owner, string repository);
+        Task<PullRequest[]> GetPullRequests(string owner, string repository);
+        Task<User[]> GetRequestedReviewersUsers(string owner, string repository, int pullRequestNumber);
+        Task<PullRequestReview[]> GetPullRequsetReviews(string owner, string repository, int pullRequestNumber);
     }
 }

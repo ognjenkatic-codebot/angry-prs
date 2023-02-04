@@ -16,15 +16,25 @@ namespace AngryPullRequests.Infrastructure.Services
             this.mapper = mapper;
         }
 
-        public async Task<Domain.Models.PullRequest[]> GetOpenPrs(string owner, string repository)
+        public async Task<Domain.Models.PullRequest[]> GetPullRequests(string owner, string repository)
         {
-            var prs = await gitHubClient.PullRequest.GetAllForRepository(owner, repository);
-            var rr = await gitHubClient.PullRequest.ReviewRequest.Get(owner, repository, prs[0].Number);
+            var pullRequests = await gitHubClient.PullRequest.GetAllForRepository(owner, repository);
 
-            var rews = await gitHubClient.PullRequest.Review.GetAll(owner, repository, prs[0].Number);
+            return mapper.Map<Domain.Models.PullRequest[]>(pullRequests.ToArray());
+        }
 
+        public async Task<Domain.Models.PullRequestReview[]> GetPullRequsetReviews(string owner, string repository, int pullRequestNumber)
+        {
+            var reviews = await gitHubClient.PullRequest.Review.GetAll(owner, repository, pullRequestNumber);
 
-            return mapper.Map<Domain.Models.PullRequest[]>(prs.ToArray());
+            return mapper.Map<Domain.Models.PullRequestReview[]>(reviews.ToArray());
+        }
+
+        public async Task<Domain.Models.User[]> GetRequestedReviewersUsers(string owner, string repository, int pullRequestNumber)
+        {
+            var requestedReviewersUsers = await gitHubClient.PullRequest.ReviewRequest.Get(owner, repository, pullRequestNumber);
+
+            return mapper.Map<Domain.Models.User[]>(requestedReviewersUsers.Users.ToArray());
         }
     }
 }

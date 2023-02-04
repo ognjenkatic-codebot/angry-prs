@@ -6,6 +6,7 @@ using AutoMapper.Contrib.Autofac.DependencyInjection;
 using AutoMapper;
 using AngryPullRequests.Infrastructure.Services;
 using Octokit;
+using AngryPullRequests.Infrastructure.Models;
 
 namespace AngryPullRequests.Infrastructure
 {
@@ -22,7 +23,15 @@ namespace AngryPullRequests.Infrastructure
         private void RegisterServices(ContainerBuilder builder)
         {
             builder.RegisterType<PullRequestService>().As<IPullRequestService>();
-            builder.RegisterInstance(new GitHubClient(new ProductHeaderValue("Test"))).As<IGitHubClient>();
+            builder
+                .Register(c =>
+                {
+                    var configuration = c.Resolve<RepositoryAccessConfiguration>();
+                    var tokenAuth = new Credentials(configuration.AccessToken);
+                    var client = new GitHubClient(new ProductHeaderValue("Test")) { Credentials = tokenAuth };
+                    return client;
+                })
+                .As<IGitHubClient>();
         }
     }
 }

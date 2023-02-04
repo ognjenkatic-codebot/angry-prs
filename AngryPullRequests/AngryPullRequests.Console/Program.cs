@@ -1,22 +1,30 @@
-﻿// See https://aka.ms/new-console-template for more information
-using AngryPullRequests.Infrastructure;
-using AngryPullRequests.Infrastructure.Services;
+﻿using AngryPullRequests.Application;
+using AngryPullRequests.Application.Services;
+using AngryPullRequests.Console.Models;
+using AngryPullRequests.Infrastructure.Models;
 using Autofac;
-using Octokit;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+var configurationText = File.ReadAllText("appsettings.json");
+
+if (string.IsNullOrEmpty(configurationText))
+{
+    throw new ArgumentException("Application requires an appsettings.json file with appropriate config");
+}
+
+var configration = JsonSerializer.Deserialize<AppConfiguration>(configurationText);
 
 var builder = new ContainerBuilder();
 
-builder.RegisterModule<InfrastructureModule>();
+builder.RegisterModule<ApplicationModule>();
+builder.RegisterInstance(configration.RepoConfiguration).SingleInstance();
+builder.RegisterInstance(configration.AccessConfiguration).SingleInstance();
 
 var container = builder.Build();
 
-var prService = container.Resolve<IPullRequestService>();
+var prService = container.Resolve<IRunnerService>();
 
-var prs = await prService.GetOpenPrs("Codaxy", "conductor-sharp");
+var cts = new CancellationTokenSource();
 
-foreach(var pr in prs)
-{
-    Console.WriteLine(pr.Url);
-    Console.WriteLine("---------------");
-    Console.WriteLine($"{pr.CreatedAt}/{pr.User.Login} | {pr.RequestedReviewers.Count}, {pr.Title}");
-}
+await prService.Start(cts.Token);

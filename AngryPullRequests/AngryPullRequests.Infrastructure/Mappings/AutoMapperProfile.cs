@@ -14,6 +14,7 @@ namespace AngryPullRequests.Infrastructure.Mappings
             CreateMap<Octokit.Label, Label>();
             CreateMap<Octokit.Account, Account>();
             CreateMap<Octokit.User, User>();
+            CreateMap<Octokit.PullRequestReview, PullRequestReview>();
         }
     }
 }
