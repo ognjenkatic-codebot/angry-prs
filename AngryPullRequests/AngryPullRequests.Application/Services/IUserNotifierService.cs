@@ -8,6 +8,6 @@ namespace AngryPullRequests.Application.Services
 {
     public interface IUserNotifierService
     {
-        Task Notify(User reviewer);
+        Task Notify(User reviewer, PullRequest pullRequest);
     }
 }
