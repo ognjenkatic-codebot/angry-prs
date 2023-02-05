@@ -20,6 +20,7 @@ var builder = new ContainerBuilder();
 
 builder.RegisterModule(new InfrastructureModule(configration.AccessConfiguration, configration.SlackConfiguration));
 builder.RegisterModule<ApplicationModule>();
+builder.RegisterInstance(configration.Scheduling).SingleInstance();
 builder.RegisterInstance(configration.RepoConfiguration).SingleInstance();
 builder.RegisterInstance(configration.AccessConfiguration).SingleInstance();
 

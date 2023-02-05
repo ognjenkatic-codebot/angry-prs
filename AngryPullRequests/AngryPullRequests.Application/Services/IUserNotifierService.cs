@@ -1,4 +1,5 @@
-﻿using AngryPullRequests.Domain.Models;
+﻿using AngryPullRequests.Application.Models;
+using AngryPullRequests.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,6 +9,6 @@ namespace AngryPullRequests.Application.Services
 {
     public interface IUserNotifierService
     {
-        Task Notify(User reviewer, PullRequest pullRequest);
+        Task Notify(PullRequestNotificationGroup[] pullRequestNotificationGroups);
     }
 }

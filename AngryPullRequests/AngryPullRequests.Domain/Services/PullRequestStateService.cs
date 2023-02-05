@@ -3,11 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace AngryPullRequests.Domain.Services
 {
     public class PullRequestStateService : IPullRequestStateService
     {
+        private static readonly Regex pullRequestTitleRegex = new Regex(@"^FRINX-[0-9]+ \|.*$");
+        private static readonly TimeSpan oldPullRequestAge = TimeSpan.FromDays(10);
+        private static readonly TimeSpan inactivePullRequestAge = TimeSpan.FromDays(3);
+        private static readonly Regex releaseTagRegex = new Regex(@"Q[0-9]+\.[0-9]+\.[0-9]+");
+
+        private const float deleteHeavyRatio = 0.2f;
+
         public bool IsPullRequestApproved(PullRequest pullRequest, PullRequestReview[] reviews, User[] requestedReviewers)
         {
             if (reviews == null || reviews.Length == 0)
@@ -41,5 +49,35 @@ namespace AngryPullRequests.Domain.Services
                 .Select(group => new { ReviewerId = group.Key, Review = group.OrderBy(r => r.SubmittedAt).Last() })
                 .ToDictionary(r => r.Review.User, r => r.Review);
         }
+
+        public bool IsHuge(PullRequest pullRequest) => pullRequest.Additions + pullRequest.Deletions > 500;
+
+        public bool FollowsNamingConventions(PullRequest pullRequest) => pullRequestTitleRegex.IsMatch(pullRequest.Title);
+
+        public bool HasReviewer(PullRequest pullRequest) => pullRequest.RequestedReviewers.Any();
+
+        public bool IsOld(PullRequest pullRequest)
+        {
+            var age = DateTimeOffset.Now - pullRequest.CreatedAt;
+
+            return age >= oldPullRequestAge;
+        }
+
+        public bool IsSmall(PullRequest pullRequest) => pullRequest.Additions + pullRequest.Deletions <= 100;
+
+        public bool IsInactive(PullRequest pullRequest)
+        {
+            var age = DateTimeOffset.Now - pullRequest.UpdatedAt;
+
+            return age >= inactivePullRequestAge;
+        }
+
+        public bool IsDeleteHeavy(PullRequest pullRequest) => (pullRequest.Additions / (float)pullRequest.Deletions) <= deleteHeavyRatio;
+
+        public bool IsInProgress(PullRequest pullRequest) => pullRequest.Labels.Any(l => l.Name == "in progress");
+
+        public bool HasReleaseTag(PullRequest pullRequest) => pullRequest.Labels.Any(l => releaseTagRegex.IsMatch(l.Name));
+
+        public string GetReleaseTag(PullRequest pullRequest) => pullRequest.Labels.First(l => releaseTagRegex.IsMatch(l.Name)).Name;
     }
 }

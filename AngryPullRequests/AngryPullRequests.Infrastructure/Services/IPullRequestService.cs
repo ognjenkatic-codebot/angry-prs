@@ -11,5 +11,6 @@ namespace AngryPullRequests.Infrastructure.Services
         Task<PullRequest[]> GetPullRequests(string owner, string repository);
         Task<User[]> GetRequestedReviewersUsers(string owner, string repository, int pullRequestNumber);
         Task<PullRequestReview[]> GetPullRequsetReviews(string owner, string repository, int pullRequestNumber);
+        Task<PullRequest> GetPullRequestDetails(string owner, string repository, int pullRequestNumber);
     }
 }

@@ -1,8 +1,11 @@
-﻿using AngryPullRequests.Domain.Models;
+﻿using AngryPullRequests.Application.Models;
+using AngryPullRequests.Domain.Models;
 using AngryPullRequests.Domain.Services;
 using AngryPullRequests.Infrastructure.Models;
 using AngryPullRequests.Infrastructure.Services;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AngryPullRequests.Application.Services
@@ -31,13 +34,25 @@ namespace AngryPullRequests.Application.Services
         {
             var pullRequests = await pullRequestService.GetPullRequests(configuration.Owner, configuration.Repository);
 
+            var notificationGroups = new List<PullRequestNotificationGroup>();
+
             foreach (var pullRequest in pullRequests)
             {
-                await CheckOutPullRequest(pullRequest);
+                var notificationGroup = await CreateNotificationGroup(pullRequest);
+
+                if (notificationGroup != null)
+                {
+                    notificationGroups.Add(notificationGroup);
+                }
+            }
+
+            if (notificationGroups.Count > 0)
+            {
+                await userNotifierService.Notify(notificationGroups.ToArray());
             }
         }
 
-        private async Task CheckOutPullRequest(PullRequest pullRequest)
+        private async Task<PullRequestNotificationGroup> CreateNotificationGroup(PullRequest pullRequest)
         {
             var requestedReviewers = await pullRequestService.GetRequestedReviewersUsers(
                 configuration.Owner,
@@ -51,13 +66,16 @@ namespace AngryPullRequests.Application.Services
 
             if (isApproved)
             {
-                return;
+                return null;
             }
 
-            foreach (var user in requestedReviewers)
-            {
-                await userNotifierService.Notify(user, pullRequest);
-            }
+            var detailedPullRequest = await pullRequestService.GetPullRequestDetails(
+                configuration.Owner,
+                configuration.Repository,
+                pullRequest.Number
+            );
+
+            return new PullRequestNotificationGroup { PullRequest = detailedPullRequest, Reviewers = requestedReviewers };
         }
     }
 }

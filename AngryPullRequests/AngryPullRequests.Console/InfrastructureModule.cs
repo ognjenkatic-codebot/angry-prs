@@ -35,6 +35,7 @@ namespace AngryPullRequests.Console
 
         private void RegisterServices(ContainerBuilder builder)
         {
+            builder.RegisterInstance(slackConfiguration);
             builder.RegisterType<PullRequestService>().As<IPullRequestService>();
             builder
                 .Register(c =>

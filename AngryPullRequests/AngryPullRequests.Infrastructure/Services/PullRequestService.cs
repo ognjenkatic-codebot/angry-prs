@@ -20,6 +20,8 @@ namespace AngryPullRequests.Infrastructure.Services
         {
             var pullRequests = await gitHubClient.PullRequest.GetAllForRepository(owner, repository);
 
+            var pullRequest = await gitHubClient.PullRequest.Get(owner, repository, pullRequests[0].Number);
+
             return mapper.Map<Domain.Models.PullRequest[]>(pullRequests.ToArray());
         }
 
@@ -35,6 +37,13 @@ namespace AngryPullRequests.Infrastructure.Services
             var requestedReviewersUsers = await gitHubClient.PullRequest.ReviewRequest.Get(owner, repository, pullRequestNumber);
 
             return mapper.Map<Domain.Models.User[]>(requestedReviewersUsers.Users.ToArray());
+        }
+
+        public async Task<Domain.Models.PullRequest> GetPullRequestDetails(string owner, string repository, int pullRequestNumber)
+        {
+            var pullRequest = await gitHubClient.PullRequest.Get(owner, repository, pullRequestNumber);
+
+            return mapper.Map<Domain.Models.PullRequest>(pullRequest);
         }
     }
 }
