@@ -15,6 +15,8 @@ namespace AngryPullRequests.Domain.Services
         private static readonly Regex releaseTagRegex = new Regex(@"Q[0-9]+\.[0-9]+\.[0-9]+");
 
         private const float deleteHeavyRatio = 0.2f;
+        private const string InProgressConstant = "in progress";
+        private const string DirtyConstant = "dirty";
 
         public bool IsPullRequestApproved(PullRequest pullRequest, PullRequestReview[] reviews, User[] requestedReviewers)
         {
@@ -74,10 +76,12 @@ namespace AngryPullRequests.Domain.Services
 
         public bool IsDeleteHeavy(PullRequest pullRequest) => (pullRequest.Additions / (float)pullRequest.Deletions) <= deleteHeavyRatio;
 
-        public bool IsInProgress(PullRequest pullRequest) => pullRequest.Labels.Any(l => l.Name == "in progress");
+        public bool IsInProgress(PullRequest pullRequest) => pullRequest.Labels.Any(l => InProgressConstant.Equals(l.Name));
 
         public bool HasReleaseTag(PullRequest pullRequest) => pullRequest.Labels.Any(l => releaseTagRegex.IsMatch(l.Name));
 
         public string GetReleaseTag(PullRequest pullRequest) => pullRequest.Labels.First(l => releaseTagRegex.IsMatch(l.Name)).Name;
+
+        public bool DoesLikelyHaveConflicts(PullRequest pullRequest) => DirtyConstant.Equals(pullRequest.MergeableState);
     }
 }

@@ -108,7 +108,7 @@ namespace AngryPullRequests.Application.Services
 
             if (!pullRequestStateService.HasReviewer(pullRequest))
             {
-                fields.Add(new PlainText { Text = $":broken_heart: Nema reviewera", Emoji = true });
+                fields.Add(new PlainText { Text = $":broken_heart: Potreban reviewer", Emoji = true });
             }
 
             if (pullRequestStateService.IsHuge(pullRequest))
@@ -144,6 +144,11 @@ namespace AngryPullRequests.Application.Services
             if (!pullRequestStateService.HasReleaseTag(pullRequest))
             {
                 fields.Add(new PlainText { Text = $":chicken: Nema release tag", Emoji = true });
+            }
+
+            if (pullRequestStateService.DoesLikelyHaveConflicts(pullRequest))
+            {
+                fields.Add(new PlainText { Text = $":pouting_cat: Ima konflikte", Emoji = true });
             }
 
             if (fields.Count > 0)
