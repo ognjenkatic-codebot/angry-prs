@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "AngryPullRequests.Console": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
