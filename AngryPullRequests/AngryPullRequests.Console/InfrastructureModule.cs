@@ -46,7 +46,12 @@ namespace AngryPullRequests.Console
                 })
                 .As<IGitHubClient>();
 
-            builder.AddSlackNet(c => c.UseApiToken(slackConfiguration.AccessToken).RegisterEventHandler<MessageEvent, SlackEventHandler>());
+            builder.AddSlackNet(
+                c =>
+                    c.UseApiToken(slackConfiguration.ApiToken)
+                        .UseAppLevelToken(slackConfiguration.AccessToken)
+                        .RegisterSlashCommandHandler<AngrySlashCommandHandler>("/test")
+            );
         }
     }
 }

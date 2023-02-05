@@ -4,10 +4,11 @@ using AngryPullRequests.Console;
 using AngryPullRequests.Console.Models;
 using AngryPullRequests.Infrastructure.Models;
 using Autofac;
+using SlackNet;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-var configurationText = File.ReadAllText("appsettings.json");
+var configurationText = System.IO.File.ReadAllText("appsettings.json");
 
 if (string.IsNullOrEmpty(configurationText))
 {
@@ -27,7 +28,9 @@ builder.RegisterInstance(configration.AccessConfiguration).SingleInstance();
 var container = builder.Build();
 
 var prService = container.Resolve<IRunnerService>();
+var slack = container.Resolve<ISlackSocketModeClient>();
 
+await slack.Connect();
 var cts = new CancellationTokenSource();
 
 await prService.Start(cts.Token);
