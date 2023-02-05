@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  angrypullrequests.console:
+    image: ${DOCKER_REGISTRY-}angrypullrequestsconsole
+    build:
+      context: .
+      dockerfile: AngryPullRequests.Console/Dockerfile
