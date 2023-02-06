@@ -38,6 +38,7 @@ namespace AngryPullRequests.Console.Autofac
             builder.RegisterInstance(appConfiguration.RepositoryConfiguration).SingleInstance();
             builder.RegisterInstance(appConfiguration.SlackConfiguration).SingleInstance();
             builder.RegisterInstance(appConfiguration.PullRequestPreferences ?? new PullRequestPreferences()).SingleInstance();
+            builder.RegisterInstance(appConfiguration.JiraConfiguration ?? new JiraConfiguration()).SingleInstance();
 
             builder.RegisterType<RunnerService>().As<IRunnerService>();
             builder.RegisterType<AngryPullRequestsService>().As<IAngryPullRequestsService>();

@@ -17,5 +17,6 @@ namespace AngryPullRequests.Domain.Services
         bool HasReleaseTag(PullRequest pullRequest);
         string GetReleaseTag(PullRequest pullRequest);
         bool DoesLikelyHaveConflicts(PullRequest pullRequest);
+        string GetJiraTicket(PullRequest pullRequest);
     }
 }

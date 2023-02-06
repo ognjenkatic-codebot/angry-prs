@@ -1,6 +1,7 @@
 ﻿using AngryPullRequests.Application.Models;
 using AngryPullRequests.Domain.Models;
 using AngryPullRequests.Domain.Services;
+using AngryPullRequests.Infrastructure.Models;
 using SlackNet.Blocks;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,12 @@ namespace AngryPullRequests.Application.Slack.Formatters
     public class ForgottenPullRequestsMessageFormatter : BaseSlackMessageFormatter
     {
         private readonly IPullRequestStateService pullRequestStateService;
+        private readonly JiraConfiguration jiraConfiguration;
 
-        public ForgottenPullRequestsMessageFormatter(IPullRequestStateService pullRequestStateService)
+        public ForgottenPullRequestsMessageFormatter(IPullRequestStateService pullRequestStateService, JiraConfiguration jiraConfiguration)
         {
             this.pullRequestStateService = pullRequestStateService;
+            this.jiraConfiguration = jiraConfiguration;
         }
 
         private List<Block> GetPullRequestsMessageBlocks(User[] reviewers, PullRequest pullRequest)
@@ -84,18 +87,22 @@ namespace AngryPullRequests.Application.Slack.Formatters
                 blocks.Add(new SectionBlock { Fields = fields });
             }
 
-            blocks.Add(
-                new ContextBlock
-                {
-                    Elements =
-                    {
-                        CreateMd($"Dana star: *{(DateTimeOffset.Now - pullRequest.CreatedAt).Days}*"),
-                        CreateMd($"Promjene: *{pullRequest.ChangedFiles} CF / {pullRequest.Additions} A / {pullRequest.Deletions} D*"),
-                        CreateMd($"Autor: *{pullRequest.User.Login}*"),
-                        CreateMd($"Pregleda: *{reviewersText}*")
-                    }
-                }
-            );
+            var elements = new List<IContextElement>
+            {
+                CreateMd($"Dana star: *{(DateTimeOffset.Now - pullRequest.CreatedAt).Days}*"),
+                CreateMd($"Promjene: *{pullRequest.ChangedFiles} CF / {pullRequest.Additions} A / {pullRequest.Deletions} D*"),
+                CreateMd($"Autor: *{pullRequest.User.Login}*"),
+                CreateMd($"Pregleda: *{reviewersText}*")
+            };
+
+            var jiraTicketName = pullRequestStateService.GetJiraTicket(pullRequest);
+
+            if (!string.IsNullOrEmpty(jiraTicketName))
+            {
+                elements.Add(CreateMd($"Jira: *<{jiraConfiguration.IssueBaseUrl}{jiraTicketName}|{jiraTicketName}> *"));
+            }
+
+            blocks.Add(new ContextBlock { Elements = elements });
 
             blocks.Add(new DividerBlock());
 

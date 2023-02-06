@@ -10,11 +10,13 @@ namespace AngryPullRequests.Domain.Services
     public class PullRequestStateService : IPullRequestStateService
     {
         private readonly PullRequestPreferences pullRequestPreferences;
+        private readonly JiraConfiguration jiraConfiguration;
         private const string DirtyConstant = "dirty";
 
-        public PullRequestStateService(PullRequestPreferences pullRequestPreferences)
+        public PullRequestStateService(PullRequestPreferences pullRequestPreferences, JiraConfiguration jiraConfiguration)
         {
             this.pullRequestPreferences = pullRequestPreferences;
+            this.jiraConfiguration = jiraConfiguration;
         }
 
         public bool IsPullRequestApproved(PullRequest pullRequest, PullRequestReview[] reviews, User[] requestedReviewers)
@@ -112,6 +114,25 @@ namespace AngryPullRequests.Domain.Services
             }
 
             return pullRequest.Labels.First(l => new Regex(pullRequestPreferences.ReleaseTagRegex).IsMatch(l.Name)).Name;
+        }
+
+        public string GetJiraTicket(PullRequest pullRequest)
+        {
+            if (string.IsNullOrEmpty(jiraConfiguration.IssueRegex))
+            {
+                return null;
+            }
+
+            var match = new Regex(jiraConfiguration.IssueRegex).Match(pullRequest.Title);
+
+            if (!match.Success || match.Groups.Count < 2)
+            {
+                return null;
+            }
+
+            var value = match.Groups[1].Value;
+
+            return value;
         }
 
         public bool DoesLikelyHaveConflicts(PullRequest pullRequest) => DirtyConstant.Equals(pullRequest.MergeableState);
