@@ -34,7 +34,7 @@ namespace AngryPullRequests.Application.Services
         {
             var pullRequests = await pullRequestService.GetPullRequests(configuration.Owner, configuration.Repository);
 
-            var notificationGroups = pullRequests.Select(async pr => await CreateNotificationGroup(pr)).Select(t => t.Result).Where(rg => rg != null);
+            var notificationGroups = pullRequests.Select(async pr => await CreateNotificationGroup(pr)).Select(t => t.Result).Where(ng => ng != null);
 
             if (notificationGroups.Any())
             {
