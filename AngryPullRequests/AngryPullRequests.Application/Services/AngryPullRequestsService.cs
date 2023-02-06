@@ -54,7 +54,7 @@ namespace AngryPullRequests.Application.Services
 
             var isApproved = pullRequestStateService.IsPullRequestApproved(pullRequest, reviews, requestedReviewers);
 
-            if (!isApproved)
+            if (isApproved)
             {
                 return null;
             }
