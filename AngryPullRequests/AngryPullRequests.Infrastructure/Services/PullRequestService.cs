@@ -20,8 +20,6 @@ namespace AngryPullRequests.Infrastructure.Services
         {
             var pullRequests = await gitHubClient.PullRequest.GetAllForRepository(owner, repository);
 
-            var pullRequest = await gitHubClient.PullRequest.Get(owner, repository, pullRequests[0].Number);
-
             return mapper.Map<Domain.Models.PullRequest[]>(pullRequests.ToArray());
         }
 
