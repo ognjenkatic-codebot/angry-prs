@@ -34,7 +34,7 @@ namespace AngryPullRequests.Application.Services
         {
             var pullRequests = await pullRequestService.GetPullRequests(configuration.Owner, configuration.Repository);
 
-            var notificationGroups = pullRequests.Select(async pr => await CreateNotificationGroup(pr)).Select(t => t.Result).Where(ng => ng != null);
+            var notificationGroups = pullRequests.Select(async pr => await GetNotificationGroup(pr)).Select(t => t.Result).Where(ng => ng != null);
 
             if (notificationGroups.Any())
             {
@@ -42,7 +42,7 @@ namespace AngryPullRequests.Application.Services
             }
         }
 
-        private async Task<PullRequestNotificationGroup> CreateNotificationGroup(PullRequest pullRequest)
+        private async Task<PullRequestNotificationGroup> GetNotificationGroup(PullRequest pullRequest)
         {
             var requestedReviewers = await pullRequestService.GetRequestedReviewersUsers(
                 configuration.Owner,
