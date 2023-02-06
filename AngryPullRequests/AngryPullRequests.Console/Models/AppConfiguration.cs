@@ -9,8 +9,7 @@ namespace AngryPullRequests.Console.Models
 {
     public class AppConfiguration
     {
-        public AngryPullRequestsConfiguration RepoConfiguration { get; set; }
-        public RepositoryAccessConfiguration AccessConfiguration { get; set; }
+        public RepositoryConfiguration RepositoryConfiguration { get; set; }
         public SlackConfiguration SlackConfiguration { get; set; }
         public SchedulingConfiguration Scheduling { get; set; }
     }

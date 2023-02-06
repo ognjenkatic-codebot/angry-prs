@@ -12,7 +12,7 @@ namespace AngryPullRequests.Application.Services
 {
     public class AngryPullRequestsService : IAngryPullRequestsService
     {
-        private readonly AngryPullRequestsConfiguration configuration;
+        private readonly RepositoryConfiguration configuration;
         private readonly IPullRequestService pullRequestService;
         private readonly IPullRequestStateService pullRequestStateService;
         private readonly IUserNotifierService userNotifierService;
@@ -21,7 +21,7 @@ namespace AngryPullRequests.Application.Services
             IPullRequestService pullRequestService,
             IPullRequestStateService pullRequestStateService,
             IUserNotifierService userNotifierService,
-            AngryPullRequestsConfiguration configuration
+            RepositoryConfiguration configuration
         )
         {
             this.configuration = configuration;

@@ -34,8 +34,7 @@ namespace AngryPullRequests.Console.Autofac
             builder.RegisterAutoMapper(typeof(AutoMapperProfile).Assembly);
 
             builder.RegisterInstance(appConfiguration.Scheduling).SingleInstance();
-            builder.RegisterInstance(appConfiguration.RepoConfiguration).SingleInstance();
-            builder.RegisterInstance(appConfiguration.AccessConfiguration).SingleInstance();
+            builder.RegisterInstance(appConfiguration.RepositoryConfiguration).SingleInstance();
 
             builder.RegisterType<RunnerService>().As<IRunnerService>();
             builder.RegisterType<AngryPullRequestsService>().As<IAngryPullRequestsService>();
@@ -47,7 +46,7 @@ namespace AngryPullRequests.Console.Autofac
             builder
                 .Register(c =>
                 {
-                    var tokenAuth = new Credentials(appConfiguration.AccessConfiguration.AccessToken);
+                    var tokenAuth = new Credentials(appConfiguration.RepositoryConfiguration.AccessToken);
                     var client = new GitHubClient(new ProductHeaderValue("Test")) { Credentials = tokenAuth };
                     return client;
                 })
