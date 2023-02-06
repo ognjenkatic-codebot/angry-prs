@@ -90,7 +90,7 @@ namespace AngryPullRequests.Application.Slack.Formatters
                     Elements =
                     {
                         CreateMd($"Dana star: *{(DateTimeOffset.Now - pullRequest.CreatedAt).Days}*"),
-                        CreateMd($"Promjene: *{pullRequest.ChangedFiles} CF/ {pullRequest.Additions} A/ {pullRequest.Deletions} D*"),
+                        CreateMd($"Promjene: *{pullRequest.ChangedFiles} CF / {pullRequest.Additions} A / {pullRequest.Deletions} D*"),
                         CreateMd($"Autor: *{pullRequest.User.Login}*"),
                         CreateMd($"Pregleda: *{reviewersText}*")
                     }
