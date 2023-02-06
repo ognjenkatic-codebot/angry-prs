@@ -50,7 +50,7 @@ namespace AngryPullRequests.Application.Services
 
             // Calculate the timespan until the target time
             var timeUntilTarget = target - today;
-            Console.WriteLine($"Waiting for {timeUntilTarget.ToString("c")} to next run");
+            Console.WriteLine($"Waiting for {timeUntilTarget:c} to next run");
             return timeUntilTarget;
         }
 
