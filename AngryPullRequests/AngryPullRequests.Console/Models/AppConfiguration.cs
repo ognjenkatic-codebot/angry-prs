@@ -1,4 +1,5 @@
-﻿using AngryPullRequests.Infrastructure.Models;
+﻿using AngryPullRequests.Domain.Models;
+using AngryPullRequests.Infrastructure.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace AngryPullRequests.Console.Models
         public RepositoryConfiguration RepositoryConfiguration { get; set; }
         public SlackConfiguration SlackConfiguration { get; set; }
         public SchedulingConfiguration Scheduling { get; set; }
+        public PullRequestPreferences PullRequestPreferences { get; set; }
     }
 }

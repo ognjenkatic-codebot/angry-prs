@@ -35,13 +35,18 @@ namespace AngryPullRequests.Console.Autofac
 
             builder.RegisterInstance(appConfiguration.Scheduling).SingleInstance();
             builder.RegisterInstance(appConfiguration.RepositoryConfiguration).SingleInstance();
+            builder.RegisterInstance(appConfiguration.SlackConfiguration).SingleInstance();
+
+            if (appConfiguration.PullRequestPreferences != null)
+            {
+                builder.RegisterInstance(appConfiguration.PullRequestPreferences).SingleInstance();
+            }
 
             builder.RegisterType<RunnerService>().As<IRunnerService>();
             builder.RegisterType<AngryPullRequestsService>().As<IAngryPullRequestsService>();
             builder.RegisterType<PullRequestStateService>().As<IPullRequestStateService>();
             builder.RegisterType<SlackNotifierService>().As<IUserNotifierService>();
 
-            builder.RegisterInstance(appConfiguration.SlackConfiguration);
             builder.RegisterType<PullRequestService>().As<IPullRequestService>();
             builder
                 .Register(c =>

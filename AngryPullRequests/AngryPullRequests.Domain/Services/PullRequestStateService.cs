@@ -9,14 +9,13 @@ namespace AngryPullRequests.Domain.Services
 {
     public class PullRequestStateService : IPullRequestStateService
     {
-        private static readonly Regex pullRequestTitleRegex = new Regex(@"^FRINX-[0-9]+ \|.*$");
-        private static readonly TimeSpan oldPullRequestAge = TimeSpan.FromDays(10);
-        private static readonly TimeSpan inactivePullRequestAge = TimeSpan.FromDays(3);
-        private static readonly Regex releaseTagRegex = new Regex(@"Q[0-9]+\.[0-9]+\.[0-9]+");
-
-        private const float deleteHeavyRatio = 0.2f;
-        private const string InProgressConstant = "in progress";
+        private readonly PullRequestPreferences pullRequestPreferences;
         private const string DirtyConstant = "dirty";
+
+        public PullRequestStateService(PullRequestPreferences pullRequestPreferences)
+        {
+            this.pullRequestPreferences = pullRequestPreferences;
+        }
 
         public bool IsPullRequestApproved(PullRequest pullRequest, PullRequestReview[] reviews, User[] requestedReviewers)
         {
@@ -52,9 +51,17 @@ namespace AngryPullRequests.Domain.Services
                 .ToDictionary(r => r.Review.User, r => r.Review);
         }
 
-        public bool IsHuge(PullRequest pullRequest) => pullRequest.Additions + pullRequest.Deletions > 500;
+        public bool IsHuge(PullRequest pullRequest) => pullRequest.Additions + pullRequest.Deletions > pullRequestPreferences.LargePrChangeCount;
 
-        public bool FollowsNamingConventions(PullRequest pullRequest) => pullRequestTitleRegex.IsMatch(pullRequest.Title);
+        public bool FollowsNamingConventions(PullRequest pullRequest)
+        {
+            if (string.IsNullOrEmpty(pullRequestPreferences.NameRegex))
+            {
+                return true;
+            }
+
+            return new Regex(pullRequestPreferences.NameRegex).IsMatch(pullRequest.Title);
+        }
 
         public bool HasReviewer(PullRequest pullRequest) => pullRequest.RequestedReviewers.Any();
 
@@ -62,25 +69,50 @@ namespace AngryPullRequests.Domain.Services
         {
             var age = DateTimeOffset.Now - pullRequest.CreatedAt;
 
-            return age >= oldPullRequestAge;
+            return age >= TimeSpan.FromDays(pullRequestPreferences.OldPrAgeByDays);
         }
 
-        public bool IsSmall(PullRequest pullRequest) => pullRequest.Additions + pullRequest.Deletions <= 100;
+        public bool IsSmall(PullRequest pullRequest) => pullRequest.Additions + pullRequest.Deletions <= pullRequestPreferences.SmallPrChangeCount;
 
         public bool IsInactive(PullRequest pullRequest)
         {
             var age = DateTimeOffset.Now - pullRequest.UpdatedAt;
 
-            return age >= inactivePullRequestAge;
+            return age >= TimeSpan.FromDays(pullRequestPreferences.InactivePrAgeByDays);
         }
 
-        public bool IsDeleteHeavy(PullRequest pullRequest) => (pullRequest.Additions / (float)pullRequest.Deletions) <= deleteHeavyRatio;
+        public bool IsDeleteHeavy(PullRequest pullRequest) =>
+            (pullRequest.Additions / (float)pullRequest.Deletions) <= pullRequestPreferences.DeleteHeavyRatio;
 
-        public bool IsInProgress(PullRequest pullRequest) => pullRequest.Labels.Any(l => InProgressConstant.Equals(l.Name));
+        public bool IsInProgress(PullRequest pullRequest)
+        {
+            if (string.IsNullOrEmpty(pullRequestPreferences.InProgressLabel))
+            {
+                return false;
+            }
 
-        public bool HasReleaseTag(PullRequest pullRequest) => pullRequest.Labels.Any(l => releaseTagRegex.IsMatch(l.Name));
+            return pullRequest.Labels.Any(l => pullRequestPreferences.InProgressLabel.Equals(l.Name));
+        }
 
-        public string GetReleaseTag(PullRequest pullRequest) => pullRequest.Labels.First(l => releaseTagRegex.IsMatch(l.Name)).Name;
+        public bool HasReleaseTag(PullRequest pullRequest)
+        {
+            if (string.IsNullOrEmpty(pullRequestPreferences.ReleaseTagRegex))
+            {
+                return true;
+            }
+
+            return pullRequest.Labels.Any(l => new Regex(pullRequestPreferences.ReleaseTagRegex).IsMatch(l.Name));
+        }
+
+        public string GetReleaseTag(PullRequest pullRequest)
+        {
+            if (!HasReleaseTag(pullRequest))
+            {
+                return null;
+            }
+
+            return pullRequest.Labels.First(l => new Regex(pullRequestPreferences.ReleaseTagRegex).IsMatch(l.Name)).Name;
+        }
 
         public bool DoesLikelyHaveConflicts(PullRequest pullRequest) => DirtyConstant.Equals(pullRequest.MergeableState);
     }
