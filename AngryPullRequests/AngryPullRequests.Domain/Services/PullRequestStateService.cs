@@ -17,7 +17,7 @@ namespace AngryPullRequests.Domain.Services
             this.pullRequestPreferences = pullRequestPreferences;
         }
 
-        public bool IsPullRequestApproved(PullRequest pullRequest, PullRequestReview[] reviews, User[] requestedReviewers)
+        public bool IsPullRequestForgotten(PullRequest pullRequest, PullRequestReview[] reviews, User[] requestedReviewers)
         {
             if (reviews == null || reviews.Length == 0)
             {
@@ -30,9 +30,9 @@ namespace AngryPullRequests.Domain.Services
             // if user is in requseted reviewers list, we cannot count his previous reviews, so they need to be filtered out
             var nonReRequestedReviews = FilterNonReRequestedUserReviews(lastReviews, requestedReviewers);
 
-            // a pull request is is approved if there is at least one latest review which approves it and there are no change requests
-            return nonReRequestedReviews.All(r => r.Value.State != PullRequestReviewStates.ChangesRequested)
-                && nonReRequestedReviews.Any(r => r.Value.State == PullRequestReviewStates.Approved);
+            // a pull request is forgotten if there are no fresh reviews or the pr is inactive and there is a request for changes
+            return (!nonReRequestedReviews.Any())
+                || (nonReRequestedReviews.Any(r => r.Value.State == PullRequestReviewStates.ChangesRequested) && IsInactive(pullRequest));
         }
 
         private Dictionary<User, PullRequestReview> FilterNonReRequestedUserReviews(
