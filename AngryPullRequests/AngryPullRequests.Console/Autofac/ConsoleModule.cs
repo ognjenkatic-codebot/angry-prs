@@ -31,6 +31,10 @@ namespace AngryPullRequests.Console.Autofac
 
             builder.RegisterAutoMapper(typeof(AutoMapperProfile).Assembly);
 
+            builder.RegisterInstance(appConfiguration.Scheduling).SingleInstance();
+            builder.RegisterInstance(appConfiguration.RepoConfiguration).SingleInstance();
+            builder.RegisterInstance(appConfiguration.AccessConfiguration).SingleInstance();
+
             builder.RegisterType<RunnerService>().As<IRunnerService>();
             builder.RegisterType<AngryPullRequestsService>().As<IAngryPullRequestsService>();
             builder.RegisterType<PullRequestStateService>().As<IPullRequestStateService>();
