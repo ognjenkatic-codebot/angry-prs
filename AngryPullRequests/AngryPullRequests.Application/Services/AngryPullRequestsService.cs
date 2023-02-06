@@ -52,9 +52,9 @@ namespace AngryPullRequests.Application.Services
 
             var reviews = await pullRequestService.GetPullRequsetReviews(configuration.Owner, configuration.Repository, pullRequest.Number);
 
-            var isForgotten = pullRequestStateService.IsPullRequestForgotten(pullRequest, reviews, requestedReviewers);
+            var isApproved = pullRequestStateService.IsPullRequestApproved(pullRequest, reviews, requestedReviewers);
 
-            if (!isForgotten)
+            if (!isApproved)
             {
                 return null;
             }

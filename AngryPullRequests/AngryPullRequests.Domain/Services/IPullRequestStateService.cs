@@ -4,7 +4,7 @@ namespace AngryPullRequests.Domain.Services
 {
     public interface IPullRequestStateService
     {
-        bool IsPullRequestForgotten(PullRequest pullRequest, PullRequestReview[] reviews, User[] requestedReviewers);
+        bool IsPullRequestApproved(PullRequest pullRequest, PullRequestReview[] reviews, User[] requestedReviewers);
         bool IsHuge(PullRequest pullRequest);
         bool IsSmall(PullRequest pullRequest);
         bool FollowsNamingConventions(PullRequest pullRequest);
