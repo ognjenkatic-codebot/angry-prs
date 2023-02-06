@@ -1,4 +1,6 @@
 ﻿using AngryPullRequests.Application.Services;
+using AngryPullRequests.Application.Slack.Formatters;
+using AngryPullRequests.Application.Slack.Services;
 using AngryPullRequests.Console.Models;
 using AngryPullRequests.Domain.Services;
 using AngryPullRequests.Infrastructure.Mappings;
@@ -57,6 +59,9 @@ namespace AngryPullRequests.Console.Autofac
                         .UseAppLevelToken(appConfiguration.SlackConfiguration.AccessToken)
                         .RegisterSlashCommandHandler<AngrySlashCommandHandler>("/test")
             );
+
+            builder.RegisterType<ForgottenPullRequestsMessageFormatter>().As<ISlackMessageFormatter>();
+            builder.RegisterType<DeveloperLoadMessageFormatter>().As<ISlackMessageFormatter>();
         }
     }
 }
