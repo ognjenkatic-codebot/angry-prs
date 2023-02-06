@@ -2,6 +2,7 @@
 using AngryPullRequests.Application.Slack.Formatters;
 using AngryPullRequests.Application.Slack.Services;
 using AngryPullRequests.Console.Models;
+using AngryPullRequests.Domain.Models;
 using AngryPullRequests.Domain.Services;
 using AngryPullRequests.Infrastructure.Mappings;
 using AngryPullRequests.Infrastructure.Models;
@@ -36,11 +37,7 @@ namespace AngryPullRequests.Console.Autofac
             builder.RegisterInstance(appConfiguration.Scheduling).SingleInstance();
             builder.RegisterInstance(appConfiguration.RepositoryConfiguration).SingleInstance();
             builder.RegisterInstance(appConfiguration.SlackConfiguration).SingleInstance();
-
-            if (appConfiguration.PullRequestPreferences != null)
-            {
-                builder.RegisterInstance(appConfiguration.PullRequestPreferences).SingleInstance();
-            }
+            builder.RegisterInstance(appConfiguration.PullRequestPreferences ?? new PullRequestPreferences()).SingleInstance();
 
             builder.RegisterType<RunnerService>().As<IRunnerService>();
             builder.RegisterType<AngryPullRequestsService>().As<IAngryPullRequestsService>();
