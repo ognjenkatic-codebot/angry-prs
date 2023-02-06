@@ -36,9 +36,9 @@ namespace AngryPullRequests.Application.Slack.Services
         {
             foreach (var formatter in messageFormatters)
             {
-                var blocks = formatter.GetBlocks(pullRequestNotificationGroups);
-
-                await slack.Chat.PostMessage(new Message { Blocks = blocks, Channel = slackConfiguration.NotificationsChannel });
+                await slack.Chat.PostMessage(
+                    new Message { Blocks = formatter.GetBlocks(pullRequestNotificationGroups), Channel = slackConfiguration.NotificationsChannel }
+                );
             }
         }
     }
