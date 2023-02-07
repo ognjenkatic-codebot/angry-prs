@@ -14,7 +14,8 @@ namespace AngryPullRequests.Application.Slack.Formatters
             var prsByUser = pullRequestNotificationGroups
                 .SelectMany(prg => prg.Reviewers)
                 .GroupBy(r => r.Login)
-                .Select(group => new { Login = group.Key, Count = group.Count() });
+                .Select(group => new { Login = group.Key, Count = group.Count() })
+                .OrderByDescending(pu => pu.Count);
 
             var userBlocks = new List<Block> { new HeaderBlock { Text = CreatePe($"Opterecenje po developeru :face_with_peeking_eye:") } };
 
