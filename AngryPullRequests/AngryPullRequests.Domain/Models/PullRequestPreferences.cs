@@ -6,6 +6,7 @@ namespace AngryPullRequests.Domain.Models
 {
     public class PullRequestPreferences
     {
+        public string NameCaptureRegex { get; set; }
         public string NameRegex { get; set; }
         public string ReleaseTagRegex { get; set; }
         public string InProgressLabel { get; set; }

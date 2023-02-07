@@ -25,9 +25,11 @@ namespace AngryPullRequests.Application.Slack.Formatters
         {
             var reviewersText = reviewers?.Length > 0 ? $"{string.Join(',', reviewers.Select(r => r.Login))}" : "N/A";
 
+            var pullRequestTitle = pullRequestStateService.GetNameWithoutJiraTicket(pullRequest) ?? pullRequest.Title;
+
             var blocks = new List<Block>
             {
-                new SectionBlock { Text = CreateMd($"Pull request <{pullRequest.HtmlUrl}|{pullRequest.Title}> jos uvijek nije pregledan"), }
+                new SectionBlock { Text = CreateMd($"Pull request <{pullRequest.HtmlUrl}|{pullRequestTitle}> jos uvijek nije odobren"), }
             };
 
             var fields = new List<TextObject>();
