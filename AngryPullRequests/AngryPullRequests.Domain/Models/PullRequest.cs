@@ -168,8 +168,9 @@ namespace AngryPullRequests.Domain.Models
         /// </summary>
         public IReadOnlyList<User> RequestedReviewers { get; private set; }
 
-
         public IReadOnlyList<Label> Labels { get; private set; }
 
+        public string BaseRef { get; set; }
+        public string HeadRef { get; set; }
     }
 }
