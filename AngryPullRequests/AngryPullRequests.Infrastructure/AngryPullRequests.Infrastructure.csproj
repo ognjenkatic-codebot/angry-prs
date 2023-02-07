@@ -10,12 +10,11 @@
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Contrib.Autofac.DependencyInjection" Version="7.1.0" />
     <PackageReference Include="Octokit" Version="5.0.0" />
-    <PackageReference Include="Slack.Webhooks" Version="1.1.5" />
-    <PackageReference Include="SlackNet.Autofac" Version="0.10.20" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AngryPullRequests.Domain\AngryPullRequests.Domain.csproj" />
+    <ProjectReference Include="..\AngryPullRequests.Application\AngryPullRequests.Application.csproj" />
   </ItemGroup>
+
 
 </Project>

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AngryPullRequests.Infrastructure.Services
+namespace AngryPullRequests.Application.Services
 {
     public interface IPullRequestService
     {

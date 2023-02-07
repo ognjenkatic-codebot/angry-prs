@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using AngryPullRequests.Application.Services;
+using AutoMapper;
 using Octokit;
 using System.Linq;
 using System.Threading.Tasks;

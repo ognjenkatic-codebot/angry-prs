@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AngryPullRequests.Application\AngryPullRequests.Application.csproj" />
+    <ProjectReference Include="..\AngryPullRequests.Infrastructure\AngryPullRequests.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

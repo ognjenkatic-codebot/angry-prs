@@ -1,8 +1,5 @@
 ﻿using AngryPullRequests.Domain.Models;
 using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AngryPullRequests.Infrastructure.Mappings
 {
