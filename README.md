@@ -2,6 +2,8 @@
 
 Opinionated PR Slack chatbot. Više dokumentacije uskoro.
 
+DockerHub: https://hub.docker.com/r/ognjenkatic/angry-prs
+
 Primjer pokretanja sa https://github.com/dotnet/core repo 
 
 *Example run with https://github.com/dotnet/core repo:*
