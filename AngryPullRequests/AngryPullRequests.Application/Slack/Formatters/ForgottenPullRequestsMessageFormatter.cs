@@ -103,7 +103,7 @@ namespace AngryPullRequests.Application.Slack.Formatters
 
             if (!string.IsNullOrEmpty(jiraTicketName))
             {
-                elements.Add(CreateMd($"Jira: *<{jiraConfiguration.IssueBaseUrl}{jiraTicketName}|{jiraTicketName}> *"));
+                elements.Add(CreateMd($"Jira: *<{jiraConfiguration.IssueBaseUrl}{jiraTicketName}|{jiraTicketName}>*"));
             }
 
             blocks.Add(new ContextBlock { Elements = elements });
