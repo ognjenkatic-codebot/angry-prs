@@ -6,7 +6,7 @@ using AngryPullRequests.Domain.Models;
 using AngryPullRequests.Domain.Services;
 using AngryPullRequests.Infrastructure.Mappings;
 using AngryPullRequests.Infrastructure.Models;
-using AngryPullRequests.Infrastructure.Services;
+using AngryPullRequests.Infrastructure.Services.Github;
 using Autofac;
 using AutoMapper.Contrib.Autofac.DependencyInjection;
 using Octokit;

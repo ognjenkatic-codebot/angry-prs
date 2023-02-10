@@ -4,7 +4,7 @@ using Octokit;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AngryPullRequests.Infrastructure.Services
+namespace AngryPullRequests.Infrastructure.Services.Github
 {
     public class PullRequestService : IPullRequestService
     {
