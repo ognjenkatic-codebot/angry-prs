@@ -2,6 +2,7 @@
 using AngryPullRequests.Domain.Models;
 using AngryPullRequests.Domain.Services;
 using AngryPullRequests.Infrastructure.Models;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,14 +30,19 @@ namespace AngryPullRequests.Application.Services
 
         public async Task CheckOutPullRequests()
         {
-            var pullRequests = await pullRequestService.GetPullRequests(configuration.Owner, configuration.Repository);
-
-            var notificationGroups = pullRequests.Select(async pr => await GetNotificationGroup(pr)).Select(t => t.Result).Where(ng => ng != null);
+            var notificationGroups = await GetNotificationGroups();
 
             if (notificationGroups.Any())
             {
                 await userNotifierService.Notify(notificationGroups.ToArray());
             }
+        }
+
+        public async Task<List<PullRequestNotificationGroup>> GetNotificationGroups()
+        {
+            var pullRequests = await pullRequestService.GetPullRequests(configuration.Owner, configuration.Repository);
+
+            return pullRequests.Select(async pr => await GetNotificationGroup(pr)).Select(t => t.Result).Where(ng => ng != null).ToList();
         }
 
         private async Task<PullRequestNotificationGroup> GetNotificationGroup(PullRequest pullRequest)

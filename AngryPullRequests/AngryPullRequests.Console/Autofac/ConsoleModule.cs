@@ -59,7 +59,7 @@ namespace AngryPullRequests.Console.Autofac
                 c =>
                     c.UseApiToken(appConfiguration.SlackConfiguration.ApiToken)
                         .UseAppLevelToken(appConfiguration.SlackConfiguration.AccessToken)
-                        .RegisterSlashCommandHandler<AngrySlashCommandHandler>("/test")
+                        .RegisterSlashCommandHandler<AngrySlashCommandHandler>("/apr-all")
             );
 
             builder.RegisterType<ForgottenPullRequestsMessageFormatter>().As<ISlackMessageFormatter>();
