@@ -26,17 +26,22 @@ namespace AngryPullRequests.Infrastructure.Services.OpenAi
 
         public async Task<string> GetCompletion(string prompt)
         {
-            var result = await Api.Completions.CreateCompletionAsync(
-                new CompletionRequest(prompt, model: Model.DavinciText, temperature: 0.7, max_tokens: 256)
-            );
+            string text;
 
-            var text = result.Completions[0].Text;
+            try
+            {
+                var result = await Api.Completions.CreateCompletionAsync(
+                    new CompletionRequest(prompt, model: Model.DavinciText, temperature: 0.7, max_tokens: 2000)
+                );
 
-            var regex = new Regex("\"(.*?)\"");
+                text = result.Completions[0].Text.Replace("\n", "").Trim();
+            }
+            catch (Exception)
+            {
+                text = "Service unavailable";
+            }
 
-            var match = regex.Matches(text);
-
-            return string.Join(' ', match.Select(m => m.Value));
+            return text;
         }
     }
 }
