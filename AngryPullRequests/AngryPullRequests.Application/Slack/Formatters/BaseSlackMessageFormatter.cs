@@ -3,6 +3,7 @@ using SlackNet.Blocks;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AngryPullRequests.Application.Slack.Formatters
 {
@@ -12,6 +13,6 @@ namespace AngryPullRequests.Application.Slack.Formatters
 
         protected Markdown CreateMd(string text) => new() { Text = text };
 
-        public abstract List<Block> GetBlocks(PullRequestNotificationGroup[] pullRequestNotificationGroups);
+        public abstract Task<List<Block>> GetBlocks(PullRequestNotificationGroup[] pullRequestNotificationGroups);
     }
 }

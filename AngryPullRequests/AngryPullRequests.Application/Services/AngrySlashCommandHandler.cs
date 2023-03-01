@@ -26,7 +26,7 @@ namespace AngryPullRequests.Application.Services
 
                 var blocks = new List<Block>();
 
-                blocks.AddRange(forgottenPullRequestsMessageFormatter.GetBlocks(groups.ToArray()));
+                blocks.AddRange(await forgottenPullRequestsMessageFormatter.GetBlocks(groups.ToArray()));
 
                 return new SlashCommandResponse
                 {

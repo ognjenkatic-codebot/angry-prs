@@ -4,12 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AngryPullRequests.Application.Slack.Formatters
 {
     public class DeveloperLoadMessageFormatter : BaseSlackMessageFormatter
     {
-        public override List<Block> GetBlocks(PullRequestNotificationGroup[] pullRequestNotificationGroups)
+        public override Task<List<Block>> GetBlocks(PullRequestNotificationGroup[] pullRequestNotificationGroups)
         {
             var prsByUser = pullRequestNotificationGroups
                 .SelectMany(prg => prg.Reviewers)
@@ -31,7 +32,7 @@ namespace AngryPullRequests.Application.Slack.Formatters
 
                 userBlocks.Add(new ContextBlock { Elements = { CreatePe($"{user.Login}: {emoji} {user.Count}") } });
             }
-            return userBlocks;
+            return Task.FromResult(userBlocks);
         }
     }
 }
