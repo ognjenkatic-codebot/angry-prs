@@ -9,6 +9,5 @@ namespace AngryPullRequests.Application.Services
     public interface IAngryPullRequestsService
     {
         Task CheckOutPullRequests(string repositoryName, string repositoryOwner);
-        Task<List<PullRequestNotificationGroup>> GetNotificationGroups(string repositoryName, string repositoryOwner);
     }
 }

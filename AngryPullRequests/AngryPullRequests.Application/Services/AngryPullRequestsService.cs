@@ -1,4 +1,5 @@
 ﻿using AngryPullRequests.Application.Models;
+using AngryPullRequests.Domain.Entities;
 using AngryPullRequests.Domain.Models;
 using AngryPullRequests.Domain.Services;
 using Microsoft.EntityFrameworkCore;
@@ -11,28 +12,27 @@ namespace AngryPullRequests.Application.Services
     public class AngryPullRequestsService : IAngryPullRequestsService
     {
         private readonly IPullRequestService pullRequestService;
-        private readonly IPullRequestStateService pullRequestStateService;
         private readonly IUserNotifierService userNotifierService;
         private readonly IAngryPullRequestsContext dbContext;
 
         public AngryPullRequestsService(
             IPullRequestService pullRequestService,
-            IPullRequestStateService pullRequestStateService,
             IUserNotifierService userNotifierService,
             IAngryPullRequestsContext dbContext
         )
         {
             this.pullRequestService = pullRequestService;
-            this.pullRequestStateService = pullRequestStateService;
             this.userNotifierService = userNotifierService;
             this.dbContext = dbContext;
         }
 
         public async Task CheckOutPullRequests(string repositoryName, string repositoryOwner)
         {
-            var repository = await dbContext.Repositories.FirstAsync(r => r.Name == repositoryName && r.Owner == repositoryOwner);
+            var repository = await dbContext.Repositories
+                .Include(r => r.Characteristics)
+                .FirstAsync(r => r.Name == repositoryName && r.Owner == repositoryOwner);
 
-            var notificationGroups = await GetNotificationGroups(repository.Name, repository.Owner);
+            var notificationGroups = await GetNotificationGroups(repository.Name, repository.Owner, repository.Characteristics);
 
             if (notificationGroups.Any())
             {
@@ -40,20 +40,31 @@ namespace AngryPullRequests.Application.Services
             }
         }
 
-        public async Task<List<PullRequestNotificationGroup>> GetNotificationGroups(string repositoryName, string repositoryOwner)
+        private async Task<List<PullRequestNotificationGroup>> GetNotificationGroups(
+            string repositoryName,
+            string repositoryOwner,
+            RepositoryCharacteristics characteristics
+        )
         {
             var pullRequests = await pullRequestService.GetPullRequests(repositoryOwner, repositoryName, false, 1, 30, 1);
 
             return pullRequests
-                .Select(async pr => await GetNotificationGroup(pr, repositoryName, repositoryOwner))
+                .Select(async pr => await GetNotificationGroup(pr, repositoryName, repositoryOwner, characteristics))
                 .Select(t => t.Result)
                 .Where(ng => ng != null)
                 .ToList();
         }
 
-        private async Task<PullRequestNotificationGroup> GetNotificationGroup(PullRequest pullRequest, string repositoryName, string repositoryOwner)
+        private async Task<PullRequestNotificationGroup> GetNotificationGroup(
+            PullRequest pullRequest,
+            string repositoryName,
+            string repositoryOwner,
+            RepositoryCharacteristics characteristics
+        )
         {
             var requestedReviewers = await pullRequestService.GetRequestedReviewersUsers(repositoryOwner, repositoryName, pullRequest.Number);
+
+            var pullRequestStateService = new PullRequestStateService(characteristics);
 
             var reviews = await pullRequestService.GetPullRequsetReviews(repositoryOwner, repositoryName, pullRequest.Number);
 
