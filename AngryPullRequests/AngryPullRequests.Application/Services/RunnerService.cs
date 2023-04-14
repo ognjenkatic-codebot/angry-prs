@@ -27,7 +27,6 @@ namespace AngryPullRequests.Application.Services
 
         private TimeSpan GetDelayToNextRun()
         {
-            return TimeSpan.FromSeconds(1);
             var target = new DateTime(
                 DateTime.Now.Year,
                 DateTime.Now.Month,
