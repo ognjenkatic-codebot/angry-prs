@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AngryPullRequests.Console", "AngryPullRequests.Console\AngryPullRequests.Console.csproj", "{6F3E395E-1EE4-4610-B1A4-9D1D684FBE5A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AngryPullRequests.Application", "AngryPullRequests.Application\AngryPullRequests.Application.csproj", "{FC3C7E42-F828-4163-9694-F1D32322C019}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AngryPullRequests.Infrastructure", "AngryPullRequests.Infrastructure\AngryPullRequests.Infrastructure.csproj", "{2A9AD8E5-43D1-46B6-93D4-AA1DE5D2F673}"
@@ -21,10 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6F3E395E-1EE4-4610-B1A4-9D1D684FBE5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F3E395E-1EE4-4610-B1A4-9D1D684FBE5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6F3E395E-1EE4-4610-B1A4-9D1D684FBE5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6F3E395E-1EE4-4610-B1A4-9D1D684FBE5A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FC3C7E42-F828-4163-9694-F1D32322C019}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FC3C7E42-F828-4163-9694-F1D32322C019}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC3C7E42-F828-4163-9694-F1D32322C019}.Release|Any CPU.ActiveCfg = Release|Any CPU
