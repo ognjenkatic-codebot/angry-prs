@@ -10,6 +10,19 @@ namespace AngryPullRequests.Infrastructure.Persistence.Configurations
         {
             builder.HasKey(r => r.RepositoryId);
             builder.HasOne(r => r.Repository).WithOne(r => r.Characteristics).HasForeignKey<RepositoryCharacteristics>(r => r.RepositoryId);
+
+            builder.Property(r => r.InProgressLabel).IsRequired();
+            builder.Property(r => r.SmallPrChangeCount).IsRequired();
+            builder.Property(r => r.LargePrChangeCount).IsRequired();
+            builder.Property(r => r.InactivePrAgeInDays).IsRequired();
+            builder.Property(r => r.OldPrAgeInDays).IsRequired();
+            builder.Property(r => r.DeleteHeaveRatio).IsRequired();
+            builder.Property(r => r.PullRequestNameCaptureRegex).IsRequired();
+            builder.Property(r => r.PullRequestNameRegex).IsRequired();
+            builder.Property(r => r.ReleaseTagRegex).IsRequired();
+            builder.Property(r => r.SlackAccessToken).IsRequired();
+            builder.Property(r => r.SlackApiToken).IsRequired();
+            builder.Property(r => r.SlackNotificationChannel).IsRequired();
         }
     }
 }
