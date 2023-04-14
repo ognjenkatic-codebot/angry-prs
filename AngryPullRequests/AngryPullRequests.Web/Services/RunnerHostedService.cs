@@ -21,7 +21,12 @@ namespace AngryPullRequests.Web.Services
             while (!cancellationToken.IsCancellationRequested)
             {
                 await Run();
-                await Task.Delay(GetDelayToNextMinute(), cancellationToken);
+
+                // Calculate delay untill next minute, assuming tasks don't run for more than one minute
+                var now = DateTimeOffset.UtcNow;
+                var nowPlus = new DateTimeOffset(now.Year, now.Month, now.Day, now.Hour, now.Minute + 1, 5, TimeSpan.Zero);
+
+                await Task.Delay(nowPlus - now, cancellationToken);
             }
         }
 
@@ -31,17 +36,12 @@ namespace AngryPullRequests.Web.Services
             return Task.CompletedTask;
         }
 
-        private static TimeSpan GetDelayToNextMinute()
-        {
-            var now = DateTimeOffset.UtcNow;
-            var nowPlus = new DateTimeOffset(now.Year, now.Month, now.Day, now.Hour, now.Minute + 1, 5, TimeSpan.Zero);
-            return nowPlus - now;
-        }
-
         private async Task Run()
         {
             var now = DateTimeOffset.UtcNow;
             var repos = await dbContext.RunSchedules.Include(r => r.Repository).ToListAsync();
+
+            var runTasks = new List<Task>();
 
             foreach (var repo in repos)
             {
@@ -50,9 +50,11 @@ namespace AngryPullRequests.Web.Services
 
                 if (isNow)
                 {
-                    await angryPullRequestServiceFactory().CheckOutPullRequests(repo.Repository.Name, repo.Repository.Owner);
+                    runTasks.Add(angryPullRequestServiceFactory().CheckOutPullRequests(repo.Repository.Name, repo.Repository.Owner));
                 }
             }
+
+            await Task.WhenAll(runTasks);
         }
     }
 }
