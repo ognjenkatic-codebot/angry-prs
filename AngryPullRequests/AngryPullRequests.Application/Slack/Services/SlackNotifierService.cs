@@ -1,9 +1,6 @@
 ﻿using AngryPullRequests.Application.Models;
 using AngryPullRequests.Application.Services;
 using AngryPullRequests.Application.Slack.Formatters;
-using AngryPullRequests.Domain.Models;
-using AngryPullRequests.Domain.Services;
-using AngryPullRequests.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 using SlackNet;
 using SlackNet.Blocks;
@@ -40,7 +37,7 @@ namespace AngryPullRequests.Application.Slack.Services
                 await api.Chat.PostMessage(
                     new Message
                     {
-                        Blocks = await formatter.GetBlocks(pullRequestNotificationGroups),
+                        Blocks = await formatter.GetBlocks(pullRequestNotificationGroups, repositoryName, repositoryOwner),
                         Channel = dbRepository.Characteristics.SlackNotificationChannel
                     }
                 );

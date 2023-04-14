@@ -2,8 +2,6 @@
 using AngryPullRequests.Application.Services;
 using AngryPullRequests.Domain.Models;
 using AngryPullRequests.Domain.Services;
-using AngryPullRequests.Infrastructure.Models;
-using Autofac.Features.OwnedInstances;
 using SlackNet.Blocks;
 using System;
 using System.Collections.Generic;
@@ -12,29 +10,36 @@ using System.Net.Http.Headers;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace AngryPullRequests.Application.Slack.Formatters
 {
     public class ForgottenPullRequestsMessageFormatter : BaseSlackMessageFormatter
     {
-        private readonly IPullRequestStateService pullRequestStateService;
-
-        private readonly JiraConfiguration jiraConfiguration;
         private readonly IMetricService metricService;
+        private readonly IAngryPullRequestsContext dbContext;
 
-        public ForgottenPullRequestsMessageFormatter(
-            IPullRequestStateService pullRequestStateService,
-            JiraConfiguration jiraConfiguration,
-            IMetricService metricService
-        )
+        public ForgottenPullRequestsMessageFormatter(IMetricService metricService, IAngryPullRequestsContext dbContext)
         {
-            this.pullRequestStateService = pullRequestStateService;
-            this.jiraConfiguration = jiraConfiguration;
             this.metricService = metricService;
+            this.dbContext = dbContext;
         }
 
-        private async Task<List<Block>> GetPullRequestsMessageBlocks(User[] reviewers, PullRequest pullRequest)
+        private async Task<List<Block>> GetPullRequestsMessageBlocks(
+            User[] reviewers,
+            PullRequest pullRequest,
+            string repositoryName,
+            string repositoryOwner
+        )
         {
+            var dbRepository = await dbContext.Repositories
+                .Include(r => r.Characteristics)
+                .FirstAsync(r => r.Name == repositoryName && r.Owner == repositoryOwner);
+
+            var issueBaseUrl = dbRepository.Characteristics.IssueBaseUrl;
+
+            var pullRequestStateService = new PullRequestStateService(dbRepository.Characteristics);
+
             var reviewersText = reviewers?.Length > 0 ? $"{string.Join(',', reviewers.Select(r => r.Login))}" : "N/A";
 
             var pullRequestTitle = pullRequestStateService.GetNameWithoutJiraTicket(pullRequest) ?? pullRequest.Title;
@@ -136,7 +141,7 @@ namespace AngryPullRequests.Application.Slack.Formatters
 
             if (!string.IsNullOrEmpty(jiraTicketName))
             {
-                elements.Add(CreateMd($"Jira: *<{jiraConfiguration.IssueBaseUrl}{jiraTicketName}|{jiraTicketName}>*"));
+                elements.Add(CreateMd($"Jira: *<{issueBaseUrl}{jiraTicketName}|{jiraTicketName}>*"));
             }
 
             blocks.Add(new ContextBlock { Elements = elements });
@@ -146,7 +151,11 @@ namespace AngryPullRequests.Application.Slack.Formatters
             return blocks;
         }
 
-        public override async Task<List<Block>> GetBlocks(PullRequestNotificationGroup[] pullRequestNotificationGroups)
+        public override async Task<List<Block>> GetBlocks(
+            PullRequestNotificationGroup[] pullRequestNotificationGroups,
+            string repositoryName,
+            string repositoryOwner
+        )
         {
             var users = string.Join(',', pullRequestNotificationGroups.Select(p => p.PullRequest.User.Login).ToList());
 
@@ -154,7 +163,7 @@ namespace AngryPullRequests.Application.Slack.Formatters
 
             foreach (var group in pullRequestNotificationGroups)
             {
-                blocks.AddRange(await GetPullRequestsMessageBlocks(group.Reviewers, group.PullRequest));
+                blocks.AddRange(await GetPullRequestsMessageBlocks(group.Reviewers, group.PullRequest, repositoryName, repositoryOwner));
             }
 
             return blocks;

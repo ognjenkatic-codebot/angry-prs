@@ -22,5 +22,7 @@ namespace AngryPullRequests.Domain.Entities
         public string SlackNotificationChannel { get; set; }
         public string SlackAccessToken { get; set; }
         public string SlackApiToken { get; set; }
+        public string IssueBaseUrl { get; set; }
+        public string IssueRegex { get; set; }
     }
 }

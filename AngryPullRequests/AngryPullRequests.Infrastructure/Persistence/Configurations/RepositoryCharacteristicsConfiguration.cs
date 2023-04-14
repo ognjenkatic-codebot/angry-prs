@@ -23,6 +23,8 @@ namespace AngryPullRequests.Infrastructure.Persistence.Configurations
             builder.Property(r => r.SlackAccessToken).IsRequired();
             builder.Property(r => r.SlackApiToken).IsRequired();
             builder.Property(r => r.SlackNotificationChannel).IsRequired();
+            builder.Property(r => r.IssueBaseUrl).IsRequired();
+            builder.Property(r => r.IssueRegex).IsRequired();
         }
     }
 }

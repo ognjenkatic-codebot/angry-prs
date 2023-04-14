@@ -7,6 +7,6 @@ namespace AngryPullRequests.Application.Slack.Formatters
 {
     public interface ISlackMessageFormatter
     {
-        Task<List<Block>> GetBlocks(PullRequestNotificationGroup[] pullRequestNotificationGroups);
+        Task<List<Block>> GetBlocks(PullRequestNotificationGroup[] pullRequestNotificationGroups, string repositoryName, string repositoryOwner);
     }
 }

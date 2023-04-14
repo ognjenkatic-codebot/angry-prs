@@ -6,7 +6,6 @@ using AngryPullRequests.Domain.Models;
 using AngryPullRequests.Domain.Services;
 using AngryPullRequests.Infrastructure.Common;
 using AngryPullRequests.Infrastructure.Github;
-using AngryPullRequests.Infrastructure.Models;
 using AngryPullRequests.Infrastructure.OpenAi;
 using Autofac;
 using AutoMapper.Contrib.Autofac.DependencyInjection;
@@ -35,16 +34,8 @@ namespace AngryPullRequests.Console.Autofac
 
             builder.RegisterAutoMapper(typeof(AutoMapperProfile).Assembly);
 
-            builder.RegisterInstance(appConfiguration.Scheduling).SingleInstance();
-            builder.RegisterInstance(appConfiguration.RepositoryConfiguration).SingleInstance();
-            builder.RegisterInstance(appConfiguration.SlackConfiguration).SingleInstance();
-            builder.RegisterInstance(appConfiguration.PullRequestPreferences ?? new PullRequestPreferences()).SingleInstance();
-            builder.RegisterInstance(appConfiguration.JiraConfiguration ?? new JiraConfiguration()).SingleInstance();
-            builder.RegisterInstance(appConfiguration.OpenAiConfiguration).SingleInstance();
-
             builder.RegisterType<RunnerService>().As<IRunnerService>();
             builder.RegisterType<AngryPullRequestsService>().As<IAngryPullRequestsService>();
-            builder.RegisterType<PullRequestStateService>().As<IPullRequestStateService>();
             builder.RegisterType<SlackNotifierService>().As<IUserNotifierService>();
             builder.RegisterType<OpenAiCompletionService>().As<ICompletionService>();
             builder.RegisterType<MetricService>().As<IMetricService>();

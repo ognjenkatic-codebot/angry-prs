@@ -1,4 +1,6 @@
-﻿using AngryPullRequests.Domain.Models;
+﻿using AngryPullRequests.Application.Services;
+using AngryPullRequests.Domain.Entities;
+using AngryPullRequests.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +20,12 @@ namespace AngryPullRequests.Domain.Services
 
     public class PullRequestStateService : IPullRequestStateService
     {
-        private readonly PullRequestPreferences pullRequestPreferences;
-        private readonly JiraConfiguration jiraConfiguration;
         private const string DirtyConstant = "dirty";
+        private readonly RepositoryCharacteristics repositoryCharacteristics;
 
-        public PullRequestStateService(PullRequestPreferences pullRequestPreferences, JiraConfiguration jiraConfiguration)
+        public PullRequestStateService(RepositoryCharacteristics repositoryCharacteristics)
         {
-            this.pullRequestPreferences = pullRequestPreferences;
-            this.jiraConfiguration = jiraConfiguration;
+            this.repositoryCharacteristics = repositoryCharacteristics;
         }
 
         public bool IsPullRequestApproved(PullRequest pullRequest, PullRequestReview[] reviews, User[] requestedReviewers)
@@ -62,16 +62,16 @@ namespace AngryPullRequests.Domain.Services
                 .ToDictionary(r => r.Review.User, r => r.Review);
         }
 
-        public bool IsHuge(PullRequest pullRequest) => pullRequest.Additions + pullRequest.Deletions > pullRequestPreferences.LargePrChangeCount;
+        public bool IsHuge(PullRequest pullRequest) => pullRequest.Additions + pullRequest.Deletions > repositoryCharacteristics.LargePrChangeCount;
 
         public bool FollowsNamingConventions(PullRequest pullRequest)
         {
-            if (string.IsNullOrEmpty(pullRequestPreferences.NameRegex))
+            if (string.IsNullOrEmpty(repositoryCharacteristics.PullRequestNameRegex))
             {
                 return true;
             }
 
-            return new Regex(pullRequestPreferences.NameRegex).IsMatch(pullRequest.Title);
+            return new Regex(repositoryCharacteristics.PullRequestNameRegex).IsMatch(pullRequest.Title);
         }
 
         public bool HasReviewer(PullRequest pullRequest) => pullRequest.RequestedReviewers.Any();
@@ -80,39 +80,39 @@ namespace AngryPullRequests.Domain.Services
         {
             var age = DateTimeOffset.Now - pullRequest.CreatedAt;
 
-            return age >= TimeSpan.FromDays(pullRequestPreferences.OldPrAgeByDays);
+            return age >= TimeSpan.FromDays(repositoryCharacteristics.OldPrAgeInDays);
         }
 
-        public bool IsSmall(PullRequest pullRequest) => pullRequest.Additions + pullRequest.Deletions <= pullRequestPreferences.SmallPrChangeCount;
+        public bool IsSmall(PullRequest pullRequest) => pullRequest.Additions + pullRequest.Deletions <= repositoryCharacteristics.SmallPrChangeCount;
 
         public bool IsInactive(PullRequest pullRequest)
         {
             var age = DateTimeOffset.Now - pullRequest.UpdatedAt;
 
-            return age >= TimeSpan.FromDays(pullRequestPreferences.InactivePrAgeByDays);
+            return age >= TimeSpan.FromDays(repositoryCharacteristics.InactivePrAgeInDays);
         }
 
         public bool IsDeleteHeavy(PullRequest pullRequest) =>
-            (pullRequest.Additions / (float)pullRequest.Deletions) <= pullRequestPreferences.DeleteHeavyRatio;
+            (pullRequest.Additions / (float)pullRequest.Deletions) <= repositoryCharacteristics.DeleteHeavyRatio;
 
         public bool IsInProgress(PullRequest pullRequest)
         {
-            if (string.IsNullOrEmpty(pullRequestPreferences.InProgressLabel))
+            if (string.IsNullOrEmpty(repositoryCharacteristics.InProgressLabel))
             {
                 return false;
             }
 
-            return pullRequest.Labels.Any(l => pullRequestPreferences.InProgressLabel.Equals(l.Name));
+            return pullRequest.Labels.Any(l => repositoryCharacteristics.InProgressLabel.Equals(l.Name));
         }
 
         public bool HasReleaseTag(PullRequest pullRequest)
         {
-            if (string.IsNullOrEmpty(pullRequestPreferences.ReleaseTagRegex))
+            if (string.IsNullOrEmpty(repositoryCharacteristics.ReleaseTagRegex))
             {
                 return true;
             }
 
-            return pullRequest.Labels.Any(l => new Regex(pullRequestPreferences.ReleaseTagRegex).IsMatch(l.Name));
+            return pullRequest.Labels.Any(l => new Regex(repositoryCharacteristics.ReleaseTagRegex).IsMatch(l.Name));
         }
 
         public string GetReleaseTag(PullRequest pullRequest)
@@ -122,17 +122,17 @@ namespace AngryPullRequests.Domain.Services
                 return null;
             }
 
-            return pullRequest.Labels.First(l => new Regex(pullRequestPreferences.ReleaseTagRegex).IsMatch(l.Name)).Name;
+            return pullRequest.Labels.First(l => new Regex(repositoryCharacteristics.ReleaseTagRegex).IsMatch(l.Name)).Name;
         }
 
         public bool HasJiraTicket(PullRequest pullRequest)
         {
-            if (string.IsNullOrEmpty(jiraConfiguration.IssueRegex))
+            if (string.IsNullOrEmpty(repositoryCharacteristics.IssueRegex))
             {
                 return false;
             }
 
-            var match = new Regex(jiraConfiguration.IssueRegex).Match(pullRequest.Title);
+            var match = new Regex(repositoryCharacteristics.IssueRegex).Match(pullRequest.Title);
 
             if (match.Success && match.Groups.Count == 2)
             {
@@ -206,7 +206,7 @@ namespace AngryPullRequests.Domain.Services
                 return null;
             }
 
-            var match = new Regex(jiraConfiguration.IssueRegex).Match(pullRequest.Title);
+            var match = new Regex(repositoryCharacteristics.IssueRegex).Match(pullRequest.Title);
 
             var value = match.Groups[1].Value.Trim();
 
@@ -217,7 +217,7 @@ namespace AngryPullRequests.Domain.Services
 
         public string GetNameWithoutJiraTicket(PullRequest pullRequest)
         {
-            if (string.IsNullOrEmpty(pullRequestPreferences.NameCaptureRegex))
+            if (string.IsNullOrEmpty(repositoryCharacteristics.PullRequestNameCaptureRegex))
             {
                 return null;
             }
@@ -227,7 +227,7 @@ namespace AngryPullRequests.Domain.Services
                 return null;
             }
 
-            var match = new Regex(pullRequestPreferences.NameCaptureRegex).Match(pullRequest.Title);
+            var match = new Regex(repositoryCharacteristics.PullRequestNameCaptureRegex).Match(pullRequest.Title);
 
             if (!match.Success || match.Groups.Count != 2)
             {

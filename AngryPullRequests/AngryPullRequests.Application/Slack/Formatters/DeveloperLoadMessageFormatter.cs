@@ -10,7 +10,11 @@ namespace AngryPullRequests.Application.Slack.Formatters
 {
     public class DeveloperLoadMessageFormatter : BaseSlackMessageFormatter
     {
-        public override Task<List<Block>> GetBlocks(PullRequestNotificationGroup[] pullRequestNotificationGroups)
+        public override Task<List<Block>> GetBlocks(
+            PullRequestNotificationGroup[] pullRequestNotificationGroups,
+            string repositoryName,
+            string repositoryOwner
+        )
         {
             var prsByUser = pullRequestNotificationGroups
                 .SelectMany(prg => prg.Reviewers)

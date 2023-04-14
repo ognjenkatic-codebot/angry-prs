@@ -13,6 +13,10 @@ namespace AngryPullRequests.Application.Slack.Formatters
 
         protected Markdown CreateMd(string text) => new() { Text = text };
 
-        public abstract Task<List<Block>> GetBlocks(PullRequestNotificationGroup[] pullRequestNotificationGroups);
+        public abstract Task<List<Block>> GetBlocks(
+            PullRequestNotificationGroup[] pullRequestNotificationGroups,
+            string repositoryName,
+            string repositoryOwner
+        );
     }
 }
