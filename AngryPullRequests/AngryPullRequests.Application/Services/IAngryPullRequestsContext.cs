@@ -7,5 +7,6 @@ namespace AngryPullRequests.Application.Services
     {
         DbSet<AngryUser> Users { get; set; }
         DbSet<Repository> Repositories { get; set; }
+        DbSet<RunSchedule> RunSchedules { get; set; }
     }
 }
