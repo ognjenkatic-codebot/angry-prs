@@ -10,5 +10,6 @@ namespace AngryPullRequests.Domain.Entities
         public string Owner { get; set; }
         public virtual AngryUser AngryUser { get; set; }
         public virtual RunSchedule RunSchedule { get; set; }
+        public virtual RepositoryCharacteristics Characteristics { get; set; }
     }
 }
