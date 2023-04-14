@@ -1,5 +1,4 @@
-﻿using AngryPullRequests.Application.Models;
-using AngryPullRequests.Domain.Models;
+﻿using AngryPullRequests.Domain.Models;
 using SlackNet.Blocks;
 using System;
 using System.Collections.Generic;
@@ -9,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AngryPullRequests.Application.Persistence;
 using AngryPullRequests.Application.AngryPullRequests.Interfaces;
 using AngryPullRequests.Application.AngryPullRequests;
+using AngryPullRequests.Application.AngryPullRequests.Models;
 
 namespace AngryPullRequests.Application.Slack.Formatters
 {

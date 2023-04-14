@@ -1,4 +1,4 @@
-﻿using AngryPullRequests.Application.Models;
+﻿using AngryPullRequests.Application.AngryPullRequests.Models;
 using SlackNet.Blocks;
 using System.Collections.Generic;
 using System.Threading.Tasks;
