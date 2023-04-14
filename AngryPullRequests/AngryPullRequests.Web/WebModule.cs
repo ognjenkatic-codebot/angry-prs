@@ -17,9 +17,9 @@ namespace AngryPullRequests.Web
     {
         private readonly AppConfiguration appConfiguration;
 
-        public WebModule(AppConfiguration appConfiguration)
+        public WebModule(IConfiguration configuration)
         {
-            this.appConfiguration = appConfiguration;
+            appConfiguration = configuration.Get<AppConfiguration>()!;
         }
 
         protected override void Load(ContainerBuilder builder)
