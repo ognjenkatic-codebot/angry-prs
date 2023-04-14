@@ -1,3 +1,5 @@
+using AngryPullRequests.Infrastructure;
+using AngryPullRequests.Infrastructure.Persistence;
 using AngryPullRequests.Web;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -5,6 +7,7 @@ using Autofac.Extensions.DependencyInjection;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+builder.Services.AddInfrastrucutreServices(builder.Configuration);
 
 // Register services directly with Autofac here. Don't
 // call builder.Populate(), that happens in AutofacServiceProviderFactory.
@@ -27,5 +30,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
+
+MigrationUtil.MigrateDatabase(app.Services);
 
 app.Run();

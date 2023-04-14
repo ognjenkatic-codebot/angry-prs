@@ -13,14 +13,13 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.5" />
     <PackageReference Include="Octokit" Version="5.0.0" />
     <PackageReference Include="OpenAI" Version="1.5.0" />
+	<PackageReference Include="EFCore.NamingConventions" Version="7.0.2" />
+	<PackageReference Include="Npgsql" Version="7.0.2" />
+	<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AngryPullRequests.Application\AngryPullRequests.Application.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Persistence\Migrations\" />
   </ItemGroup>
 
 

@@ -6,3 +6,32 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - "80"
+
+  partymanagement.db:
+    container_name: db
+    image: postgres
+    environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        PGDATA: /data/postgres
+    volumes:
+        - psqlvolume:/data/postgres
+    ports:
+        - "5432:5432"
+    restart: unless-stopped
+
+  partymanagement.pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: test@test.com
+      PGADMIN_DEFAULT_PASSWORD: test
+    volumes:
+      - pgadminvolume:/root/.pgadmin
+    ports:
+      - "8085:80"
+    restart: unless-stopped
+
+volumes:
+  psqlvolume: null
+  pgadminvolume: null
