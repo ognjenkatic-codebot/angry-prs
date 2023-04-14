@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace AngryPullRequests.Infrastructure.Services.OpenAi
+namespace AngryPullRequests.Infrastructure.OpenAi
 {
     public class OpenAiCompletionService : ICompletionService
     {

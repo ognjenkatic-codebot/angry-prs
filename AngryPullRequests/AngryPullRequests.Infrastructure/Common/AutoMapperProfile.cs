@@ -1,7 +1,7 @@
 ﻿using AngryPullRequests.Domain.Models;
 using AutoMapper;
 
-namespace AngryPullRequests.Infrastructure.Mappings
+namespace AngryPullRequests.Infrastructure.Common
 {
     public class AutoMapperProfile : Profile
     {

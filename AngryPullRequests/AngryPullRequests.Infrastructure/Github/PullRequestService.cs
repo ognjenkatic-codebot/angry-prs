@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AngryPullRequests.Infrastructure.Services.Github
+namespace AngryPullRequests.Infrastructure.Github
 {
     public class PullRequestService : IPullRequestService
     {

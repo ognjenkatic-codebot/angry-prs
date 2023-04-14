@@ -9,6 +9,7 @@ namespace AngryPullRequests.Infrastructure.Persistence
     {
         public DbSet<AngryUser> Users { get; set; }
         public DbSet<Repository> Repositories { get; set; }
+        public DbSet<RunSchedule> RunSchedules { get; set; }
 
         public AngryPullRequestsContext(DbContextOptions<AngryPullRequestsContext> options) : base(options) { }
 
