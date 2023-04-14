@@ -1,4 +1,5 @@
 ﻿using AngryPullRequests.Domain.Models;
+using System.Collections.Generic;
 
 namespace AngryPullRequests.Domain.Services
 {
@@ -19,5 +20,6 @@ namespace AngryPullRequests.Domain.Services
         string GetJiraTicket(PullRequest pullRequest);
         bool HasJiraTicket(PullRequest pullRequest);
         string GetNameWithoutJiraTicket(PullRequest pullRequest);
+        Dictionary<string, ExperienceLabel> GetUserExperienceLabels(Dictionary<string, UserExperience> userExperience);
     }
 }

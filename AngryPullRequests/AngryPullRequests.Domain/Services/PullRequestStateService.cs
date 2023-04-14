@@ -7,6 +7,15 @@ using System.Text.RegularExpressions;
 
 namespace AngryPullRequests.Domain.Services
 {
+    public enum ExperienceLabel
+    {
+        Newcomer,
+        Inexperienced,
+        ModeratelyExperienced,
+        Experienced,
+        VeryExperienced
+    }
+
     public class PullRequestStateService : IPullRequestStateService
     {
         private readonly PullRequestPreferences pullRequestPreferences;
@@ -131,6 +140,63 @@ namespace AngryPullRequests.Domain.Services
             }
 
             return false;
+        }
+
+        public Dictionary<string, ExperienceLabel> GetUserExperienceLabels(Dictionary<string, UserExperience> userExperience)
+        {
+            Dictionary<string, double> experienceLevels = new Dictionary<string, double>();
+            Dictionary<string, double> filteredExperienceLevels = new Dictionary<string, double>();
+            foreach (var developer in userExperience.Keys)
+            {
+                double experienceLevel = userExperience[developer].PullRequestsMerged / (double)userExperience[developer].TimeSinceFirstMerge.Days;
+                experienceLevels.Add(developer, experienceLevel);
+
+                if (userExperience[developer].TimeSinceFirstMerge.Days >= 90)
+                {
+                    filteredExperienceLevels.Add(developer, experienceLevel);
+                }
+            }
+
+            double[] percentiles = new double[] { 0.25, 0.50, 0.75 };
+            double[] thresholds = percentiles
+                .Select(p => filteredExperienceLevels.Values.OrderBy(x => x).ElementAt((int)(p * (filteredExperienceLevels.Count - 1))))
+                .ToArray();
+
+            Dictionary<string, ExperienceLabel> experienceLabels = new Dictionary<string, ExperienceLabel>();
+            foreach (var developer in experienceLevels.Keys)
+            {
+                ExperienceLabel label;
+
+                if (userExperience[developer].TimeSinceFirstMerge.Days < 90)
+                {
+                    label = ExperienceLabel.Newcomer;
+                }
+                else if (experienceLevels[developer] <= thresholds[0])
+                {
+                    label = ExperienceLabel.Inexperienced;
+                }
+                else if (experienceLevels[developer] <= thresholds[1])
+                {
+                    label = ExperienceLabel.ModeratelyExperienced;
+                }
+                else if (experienceLevels[developer] <= thresholds[2])
+                {
+                    label = ExperienceLabel.Experienced;
+                }
+                else
+                {
+                    label = ExperienceLabel.VeryExperienced;
+                }
+
+                experienceLabels.Add(developer, label);
+            }
+
+            return experienceLabels;
+        }
+
+        public bool IsUserActive(UserExperience userExperience)
+        {
+            return (userExperience.TimeSinceFirstMerge > TimeSpan.FromDays(60)) ? true : false;
         }
 
         public string GetJiraTicket(PullRequest pullRequest)

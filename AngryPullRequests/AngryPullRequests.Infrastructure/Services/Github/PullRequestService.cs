@@ -1,6 +1,7 @@
 ﻿using AngryPullRequests.Application.Services;
 using AutoMapper;
 using Octokit;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,11 +18,37 @@ namespace AngryPullRequests.Infrastructure.Services.Github
             this.mapper = mapper;
         }
 
-        public async Task<Domain.Models.PullRequest[]> GetPullRequests(string owner, string repository)
+        public async Task<Domain.Models.PullRequest[]> GetPullRequests(
+            string owner,
+            string repository,
+            bool getAll,
+            int pageCount,
+            int pageSize,
+            int startPage
+        )
         {
-            var pullRequests = await gitHubClient.PullRequest.GetAllForRepository(owner, repository);
+            try
+            {
+                var pullRequests = await gitHubClient.PullRequest.GetAllForRepository(
+                    owner,
+                    repository,
+                    new PullRequestRequest { State = getAll ? ItemStateFilter.All : ItemStateFilter.Open, SortProperty = PullRequestSort.Created },
+                    new ApiOptions
+                    {
+                        PageCount = pageCount,
+                        PageSize = pageSize,
+                        StartPage = startPage
+                    }
+                );
 
-            return mapper.Map<Domain.Models.PullRequest[]>(pullRequests.ToArray());
+                return mapper.Map<Domain.Models.PullRequest[]>(pullRequests.ToArray());
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine("ecx");
+            }
+
+            return null;
         }
 
         public async Task<Domain.Models.PullRequestReview[]> GetPullRequsetReviews(string owner, string repository, int pullRequestNumber)

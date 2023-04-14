@@ -40,7 +40,7 @@ namespace AngryPullRequests.Application.Services
 
         public async Task<List<PullRequestNotificationGroup>> GetNotificationGroups()
         {
-            var pullRequests = await pullRequestService.GetPullRequests(configuration.Owner, configuration.Repository);
+            var pullRequests = await pullRequestService.GetPullRequests(configuration.Owner, configuration.Repository, false, 1, 30, 1);
 
             return pullRequests.Select(async pr => await GetNotificationGroup(pr)).Select(t => t.Result).Where(ng => ng != null).ToList();
         }

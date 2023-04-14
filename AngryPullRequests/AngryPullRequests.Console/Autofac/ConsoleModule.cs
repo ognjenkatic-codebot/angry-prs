@@ -47,12 +47,13 @@ namespace AngryPullRequests.Console.Autofac
             builder.RegisterType<PullRequestStateService>().As<IPullRequestStateService>();
             builder.RegisterType<SlackNotifierService>().As<IUserNotifierService>();
             builder.RegisterType<OpenAiCompletionService>().As<ICompletionService>();
+            builder.RegisterType<MetricService>().As<IMetricService>();
 
             builder.RegisterType<PullRequestService>().As<IPullRequestService>();
             builder
                 .Register(c =>
                 {
-                    var tokenAuth = new Credentials(appConfiguration.RepositoryConfiguration.AccessToken);
+                    var tokenAuth = new Credentials("ognjenkatic", appConfiguration.RepositoryConfiguration.AccessToken);
                     var client = new GitHubClient(new ProductHeaderValue("Test")) { Credentials = tokenAuth };
                     return client;
                 })

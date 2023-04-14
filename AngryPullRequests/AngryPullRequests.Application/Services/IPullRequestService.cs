@@ -8,7 +8,7 @@ namespace AngryPullRequests.Application.Services
 {
     public interface IPullRequestService
     {
-        Task<PullRequest[]> GetPullRequests(string owner, string repository);
+        Task<PullRequest[]> GetPullRequests(string owner, string repository, bool getAll, int pageCount, int pageSize, int startPage);
         Task<User[]> GetRequestedReviewersUsers(string owner, string repository, int pullRequestNumber);
         Task<PullRequestReview[]> GetPullRequsetReviews(string owner, string repository, int pullRequestNumber);
         Task<PullRequest> GetPullRequestDetails(string owner, string repository, int pullRequestNumber);
