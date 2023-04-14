@@ -28,7 +28,7 @@ namespace AngryPullRequests.Web
             builder.RegisterType<SlackNotifierService>().As<IUserNotifierService>();
             builder.RegisterType<OpenAiCompletionService>().As<ICompletionService>();
             builder.RegisterType<MetricService>().As<IMetricService>();
-            builder.RegisterType<PullRequestService>().As<IPullRequestService>();
+            builder.RegisterType<PullRequestServiceFactory>().As<IPullRequestServiceFactory>();
 
             builder.RegisterType<ForgottenPullRequestsMessageFormatter>().As<ISlackMessageFormatter>();
             builder.RegisterType<DeveloperLoadMessageFormatter>().As<ISlackMessageFormatter>();

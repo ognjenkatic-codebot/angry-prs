@@ -15,18 +15,19 @@ namespace AngryPullRequests.Application.AngryPullRequests
         private static int lastPrProcessed = 0;
         private static int totalPrs = 0;
 
-        private readonly IPullRequestService pullRequestService;
+        private readonly IPullRequestServiceFactory pullRequestServiceFactory;
         private static Dictionary<string, UserExperience> authorExperienceMap = new Dictionary<string, UserExperience>();
 
-        public MetricService(IPullRequestService pullRequestService)
+        public MetricService(IPullRequestServiceFactory pullRequestServiceFactory)
         {
-            this.pullRequestService = pullRequestService;
+            this.pullRequestServiceFactory = pullRequestServiceFactory;
         }
 
         public int GetNumberOfPullRequests() => totalPrs;
 
         public async Task<Dictionary<string, UserExperience>> GetAuthorExperience(string repository, string owner, string author)
         {
+            var pullRequestService = await pullRequestServiceFactory.Create(repository, owner);
             var goNext = false;
             do
             {
