@@ -38,7 +38,7 @@ namespace AngryPullRequests.Application.Slack.Services
                 await api.Chat.PostMessage(
                     new Message
                     {
-                        Blocks = await formatter.GetBlocks(pullRequestNotificationGroups, repositoryName, repositoryOwner),
+                        Blocks = await formatter.GetBlocks(pullRequestNotificationGroups, dbRepository),
                         Channel = dbRepository.Characteristics.SlackNotificationChannel
                     }
                 );

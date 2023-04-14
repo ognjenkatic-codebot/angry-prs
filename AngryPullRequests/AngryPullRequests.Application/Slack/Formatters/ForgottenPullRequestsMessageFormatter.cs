@@ -9,6 +9,7 @@ using AngryPullRequests.Application.Persistence;
 using AngryPullRequests.Application.AngryPullRequests.Interfaces;
 using AngryPullRequests.Application.AngryPullRequests;
 using AngryPullRequests.Application.AngryPullRequests.Models;
+using AngryPullRequests.Domain.Entities;
 
 namespace AngryPullRequests.Application.Slack.Formatters
 {
@@ -23,20 +24,11 @@ namespace AngryPullRequests.Application.Slack.Formatters
             this.dbContext = dbContext;
         }
 
-        private async Task<List<Block>> GetPullRequestsMessageBlocks(
-            User[] reviewers,
-            PullRequest pullRequest,
-            string repositoryName,
-            string repositoryOwner
-        )
+        private async Task<List<Block>> GetPullRequestsMessageBlocks(User[] reviewers, PullRequest pullRequest, Repository repository)
         {
-            var dbRepository = await dbContext.Repositories
-                .Include(r => r.Characteristics)
-                .FirstAsync(r => r.Name == repositoryName && r.Owner == repositoryOwner);
+            var issueBaseUrl = repository.Characteristics.IssueBaseUrl;
 
-            var issueBaseUrl = dbRepository.Characteristics.IssueBaseUrl;
-
-            var pullRequestStateService = new PullRequestStateService(dbRepository.Characteristics);
+            var pullRequestStateService = new PullRequestStateService(repository.Characteristics);
 
             var reviewersText = reviewers?.Length > 0 ? $"{string.Join(',', reviewers.Select(r => r.Login))}" : "N/A";
 
@@ -149,19 +141,13 @@ namespace AngryPullRequests.Application.Slack.Formatters
             return blocks;
         }
 
-        public override async Task<List<Block>> GetBlocks(
-            PullRequestNotificationGroup[] pullRequestNotificationGroups,
-            string repositoryName,
-            string repositoryOwner
-        )
+        public override async Task<List<Block>> GetBlocks(PullRequestNotificationGroup[] pullRequestNotificationGroups, Repository repository)
         {
             var users = string.Join(',', pullRequestNotificationGroups.Select(p => p.PullRequest.User.Login).ToList());
 
             var blocks = new List<Block> { new HeaderBlock { Text = CreatePe($"Pregled Pull Requestova") } };
 
-            var tasks = pullRequestNotificationGroups.Select(
-                ng => GetPullRequestsMessageBlocks(ng.Reviewers, ng.PullRequest, repositoryName, repositoryOwner)
-            );
+            var tasks = pullRequestNotificationGroups.Select(ng => GetPullRequestsMessageBlocks(ng.Reviewers, ng.PullRequest, repository));
 
             var taskResponses = await Task.WhenAll(tasks);
 

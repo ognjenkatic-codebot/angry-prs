@@ -1,4 +1,5 @@
 ﻿using AngryPullRequests.Application.AngryPullRequests.Models;
+using AngryPullRequests.Domain.Entities;
 using SlackNet.Blocks;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,7 @@ namespace AngryPullRequests.Application.Slack.Formatters
 {
     public class DeveloperLoadMessageFormatter : BaseSlackMessageFormatter
     {
-        public override Task<List<Block>> GetBlocks(
-            PullRequestNotificationGroup[] pullRequestNotificationGroups,
-            string repositoryName,
-            string repositoryOwner
-        )
+        public override Task<List<Block>> GetBlocks(PullRequestNotificationGroup[] pullRequestNotificationGroups, Repository repository)
         {
             var prsByUser = pullRequestNotificationGroups
                 .SelectMany(prg => prg.Reviewers)

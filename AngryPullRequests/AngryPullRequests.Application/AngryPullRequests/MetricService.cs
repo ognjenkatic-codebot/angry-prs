@@ -3,8 +3,10 @@ using AngryPullRequests.Application.Github;
 using AngryPullRequests.Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AngryPullRequests.Application.AngryPullRequests
@@ -14,6 +16,7 @@ namespace AngryPullRequests.Application.AngryPullRequests
         private static int lastPageFetched = 1;
         private static int lastPrProcessed = 0;
         private static int totalPrs = 0;
+        private static SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
         private readonly IPullRequestServiceFactory pullRequestServiceFactory;
         private static Dictionary<string, UserExperience> authorExperienceMap = new Dictionary<string, UserExperience>();
@@ -27,11 +30,18 @@ namespace AngryPullRequests.Application.AngryPullRequests
 
         public async Task<Dictionary<string, UserExperience>> GetAuthorExperience(string repository, string owner, string author)
         {
+            await _semaphore.WaitAsync();
             var pullRequestService = await pullRequestServiceFactory.Create(repository, owner);
             var goNext = false;
             do
             {
+                var swatch = new Stopwatch();
+
+                swatch.Start();
+
                 var allPullRequests = await pullRequestService.GetPullRequests(owner, repository, true, 1, 100, lastPageFetched);
+
+                swatch.Stop();
 
                 var pullRequests = allPullRequests.Skip(lastPrProcessed).ToArray();
 
@@ -55,6 +65,7 @@ namespace AngryPullRequests.Application.AngryPullRequests
                 }
             } while (goNext);
 
+            _semaphore.Release();
             return authorExperienceMap;
         }
 
