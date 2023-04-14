@@ -42,7 +42,7 @@ namespace AngryPullRequests.Application.Slack.Formatters
 
             var pullRequestTitle = pullRequestStateService.GetNameWithoutJiraTicket(pullRequest) ?? pullRequest.Title;
 
-            var authorExperience = await metricService.GetAuthorExperience("vodafone-frinx-admin", "Codaxy", pullRequest.User.Login);
+            //var authorExperience = await metricService.GetAuthorExperience("vodafone-frinx-admin", "Codaxy", pullRequest.User.Login);
 
             var blocks = new List<Block>
             {
@@ -123,13 +123,13 @@ namespace AngryPullRequests.Application.Slack.Formatters
 
             var props = characteristics.Count > 0 ? string.Join(',', characteristics) : string.Empty;
 
-            var authorExp = pullRequestStateService.GetUserExperienceLabels(authorExperience);
+            //var authorExp = pullRequestStateService.GetUserExperienceLabels(authorExperience);
 
             var elements = new List<IContextElement>
             {
                 CreateMd($"Dana star: *{(DateTimeOffset.Now - pullRequest.CreatedAt).Days}*"),
                 CreateMd($"Promjene: *{pullRequest.ChangedFiles} CF / {pullRequest.Additions} A / {pullRequest.Deletions} D*"),
-                CreateMd($"Autor: *{pullRequest.User.Login}* **{authorExp[pullRequest.User.Login].ToString()}**"),
+                //CreateMd($"Autor: *{pullRequest.User.Login}* **{authorExp[pullRequest.User.Login].ToString()}**"),
                 CreateMd($"Pregleda: *{reviewersText}*"),
                 CreateMd($"Base: *{pullRequest.BaseRef}*"),
                 CreateMd($"Head: *{pullRequest.HeadRef}*")
@@ -159,10 +159,13 @@ namespace AngryPullRequests.Application.Slack.Formatters
 
             var blocks = new List<Block> { new HeaderBlock { Text = CreatePe($"Pregled Pull Requestova") } };
 
-            foreach (var group in pullRequestNotificationGroups)
-            {
-                blocks.AddRange(await GetPullRequestsMessageBlocks(group.Reviewers, group.PullRequest, repositoryName, repositoryOwner));
-            }
+            var tasks = pullRequestNotificationGroups.Select(
+                ng => GetPullRequestsMessageBlocks(ng.Reviewers, ng.PullRequest, repositoryName, repositoryOwner)
+            );
+
+            var taskResponses = await Task.WhenAll(tasks);
+
+            blocks.AddRange(taskResponses.SelectMany(b => b));
 
             return blocks;
         }
