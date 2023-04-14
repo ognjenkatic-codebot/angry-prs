@@ -1,4 +1,5 @@
-﻿using AngryPullRequests.Application.Services;
+﻿using AngryPullRequests.Application.Github;
+using AngryPullRequests.Application.Persistence;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Octokit;

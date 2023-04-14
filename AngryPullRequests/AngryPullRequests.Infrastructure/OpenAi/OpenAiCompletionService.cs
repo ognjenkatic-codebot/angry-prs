@@ -1,5 +1,5 @@
-﻿using AngryPullRequests.Application.Models;
-using AngryPullRequests.Application.Services;
+﻿using AngryPullRequests.Application.Completion;
+using AngryPullRequests.Application.Completion.Models;
 using OpenAI_API;
 using OpenAI_API.Completions;
 using OpenAI_API.Models;

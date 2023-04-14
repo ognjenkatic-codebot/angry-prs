@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AngryPullRequests.Application.Services
+namespace AngryPullRequests.Application.AngryPullRequests.Interfaces
 {
     public interface IUserNotifierService
     {

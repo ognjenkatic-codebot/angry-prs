@@ -1,8 +1,9 @@
-﻿using AngryPullRequests.Application.Services;
+﻿using AngryPullRequests.Application.AngryPullRequests;
+using AngryPullRequests.Application.AngryPullRequests.Interfaces;
+using AngryPullRequests.Application.Completion;
+using AngryPullRequests.Application.Github;
 using AngryPullRequests.Application.Slack.Formatters;
 using AngryPullRequests.Application.Slack.Services;
-using AngryPullRequests.Domain.Models;
-using AngryPullRequests.Domain.Services;
 using AngryPullRequests.Infrastructure.Common;
 using AngryPullRequests.Infrastructure.Github;
 using AngryPullRequests.Infrastructure.OpenAi;

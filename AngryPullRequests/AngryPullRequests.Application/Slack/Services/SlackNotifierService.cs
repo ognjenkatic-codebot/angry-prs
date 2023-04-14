@@ -1,5 +1,6 @@
-﻿using AngryPullRequests.Application.Models;
-using AngryPullRequests.Application.Services;
+﻿using AngryPullRequests.Application.AngryPullRequests.Interfaces;
+using AngryPullRequests.Application.Models;
+using AngryPullRequests.Application.Persistence;
 using AngryPullRequests.Application.Slack.Formatters;
 using Microsoft.EntityFrameworkCore;
 using SlackNet;

@@ -1,13 +1,15 @@
-﻿using AngryPullRequests.Application.Models;
+﻿using AngryPullRequests.Application.AngryPullRequests.Interfaces;
+using AngryPullRequests.Application.Github;
+using AngryPullRequests.Application.Models;
+using AngryPullRequests.Application.Persistence;
 using AngryPullRequests.Domain.Entities;
 using AngryPullRequests.Domain.Models;
-using AngryPullRequests.Domain.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AngryPullRequests.Application.Services
+namespace AngryPullRequests.Application.AngryPullRequests
 {
     public class AngryPullRequestsService : IAngryPullRequestsService
     {

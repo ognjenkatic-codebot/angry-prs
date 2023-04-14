@@ -1,11 +1,13 @@
-﻿using AngryPullRequests.Domain.Models;
+﻿using AngryPullRequests.Application.AngryPullRequests.Interfaces;
+using AngryPullRequests.Application.Github;
+using AngryPullRequests.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AngryPullRequests.Application.Services
+namespace AngryPullRequests.Application.AngryPullRequests
 {
     public class MetricService : IMetricService
     {

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Microsoft.EntityFrameworkCore;
-using AngryPullRequests.Application.Services;
+using AngryPullRequests.Application.Persistence;
 
 namespace AngryPullRequests.Infrastructure
 {

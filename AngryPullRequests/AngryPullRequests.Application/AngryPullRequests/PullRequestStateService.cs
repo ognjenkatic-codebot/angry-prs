@@ -1,13 +1,12 @@
-﻿using AngryPullRequests.Application.Services;
+﻿using AngryPullRequests.Application.AngryPullRequests.Interfaces;
 using AngryPullRequests.Domain.Entities;
 using AngryPullRequests.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
-namespace AngryPullRequests.Domain.Services
+namespace AngryPullRequests.Application.AngryPullRequests
 {
     public enum ExperienceLabel
     {
@@ -93,7 +92,7 @@ namespace AngryPullRequests.Domain.Services
         }
 
         public bool IsDeleteHeavy(PullRequest pullRequest) =>
-            (pullRequest.Additions / (float)pullRequest.Deletions) <= repositoryCharacteristics.DeleteHeavyRatio;
+            pullRequest.Additions / (float)pullRequest.Deletions <= repositoryCharacteristics.DeleteHeavyRatio;
 
         public bool IsInProgress(PullRequest pullRequest)
         {
@@ -196,7 +195,7 @@ namespace AngryPullRequests.Domain.Services
 
         public bool IsUserActive(UserExperience userExperience)
         {
-            return (userExperience.TimeSinceFirstMerge > TimeSpan.FromDays(60)) ? true : false;
+            return userExperience.TimeSinceFirstMerge > TimeSpan.FromDays(60) ? true : false;
         }
 
         public string GetJiraTicket(PullRequest pullRequest)

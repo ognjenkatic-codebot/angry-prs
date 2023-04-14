@@ -1,7 +1,7 @@
 ﻿using AngryPullRequests.Domain.Models;
 using System.Collections.Generic;
 
-namespace AngryPullRequests.Domain.Services
+namespace AngryPullRequests.Application.AngryPullRequests.Interfaces
 {
     public interface IPullRequestStateService
     {

@@ -15,5 +15,9 @@
 	<ItemGroup>
 	<ProjectReference Include="..\AngryPullRequests.Domain\AngryPullRequests.Domain.csproj" />
 	</ItemGroup>
+	
+	<ItemGroup>
+	  <Folder Include="Services\" />
+	</ItemGroup>
 
 </Project>

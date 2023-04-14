@@ -1,4 +1,5 @@
-﻿using AngryPullRequests.Application.Services;
+﻿using AngryPullRequests.Application.AngryPullRequests.Interfaces;
+using AngryPullRequests.Application.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace AngryPullRequests.Web.Services

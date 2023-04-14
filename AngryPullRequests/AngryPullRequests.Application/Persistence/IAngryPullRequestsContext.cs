@@ -1,7 +1,7 @@
 ﻿using AngryPullRequests.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace AngryPullRequests.Application.Services
+namespace AngryPullRequests.Application.Persistence
 {
     public interface IAngryPullRequestsContext
     {

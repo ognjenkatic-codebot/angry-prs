@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AngryPullRequests.Application.Models
+namespace AngryPullRequests.Application.Completion.Models
 {
     public class OpenAiConfiguration
     {
