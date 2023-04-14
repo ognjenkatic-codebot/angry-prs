@@ -50,7 +50,7 @@ namespace AngryPullRequests.Infrastructure.Github
             }
             catch (Exception exc)
             {
-                Console.WriteLine("ecx");
+                Console.WriteLine(exc.Message);
             }
 
             return null;

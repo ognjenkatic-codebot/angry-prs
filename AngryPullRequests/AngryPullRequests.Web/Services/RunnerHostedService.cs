@@ -5,7 +5,7 @@ namespace AngryPullRequests.Web.Services
 {
     public class RunnerHostedService : IHostedService
     {
-        private readonly CancellationTokenSource _tokenSource = new CancellationTokenSource();
+        private readonly CancellationTokenSource _tokenSource = new();
         private readonly Func<IAngryPullRequestsService> angryPullRequestServiceFactory;
         private readonly IAngryPullRequestsContext dbContext;
 
@@ -30,7 +30,7 @@ namespace AngryPullRequests.Web.Services
             return Task.CompletedTask;
         }
 
-        private TimeSpan GetDelayToNextMinute()
+        private static TimeSpan GetDelayToNextMinute()
         {
             var now = DateTimeOffset.UtcNow;
             var nowPlus = new DateTimeOffset(now.Year, now.Month, now.Day, now.Hour, now.Minute + 1, 5, TimeSpan.Zero);

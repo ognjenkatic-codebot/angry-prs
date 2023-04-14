@@ -13,6 +13,6 @@ namespace AngryPullRequests.Web.Pages
             _logger = logger;
         }
 
-        public async void OnGet() { }
+        public void OnGet() { }
     }
 }
