@@ -17,8 +17,6 @@ namespace AngryPullRequests.Web
 {
     public class WebModule : Module
     {
-        public WebModule(IConfiguration configuration) { }
-
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);

@@ -11,7 +11,7 @@ builder.Services.AddInfrastrucutreServices(builder.Configuration);
 
 // Register services directly with Autofac here. Don't
 // call builder.Populate(), that happens in AutofacServiceProviderFactory.
-builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder => containerBuilder.RegisterModule(new WebModule(builder.Configuration)));
+builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder => containerBuilder.RegisterModule(new WebModule()));
 
 // Add services to the container.
 builder.Services.AddRazorPages();
