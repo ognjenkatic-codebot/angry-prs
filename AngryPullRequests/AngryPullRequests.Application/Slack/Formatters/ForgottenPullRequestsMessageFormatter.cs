@@ -15,12 +15,10 @@ namespace AngryPullRequests.Application.Slack.Formatters
 {
     public class ForgottenPullRequestsMessageFormatter : BaseSlackMessageFormatter
     {
-        private readonly IMetricService metricService;
         private readonly IAngryPullRequestsContext dbContext;
 
-        public ForgottenPullRequestsMessageFormatter(IMetricService metricService, IAngryPullRequestsContext dbContext)
+        public ForgottenPullRequestsMessageFormatter(IAngryPullRequestsContext dbContext)
         {
-            this.metricService = metricService;
             this.dbContext = dbContext;
         }
 

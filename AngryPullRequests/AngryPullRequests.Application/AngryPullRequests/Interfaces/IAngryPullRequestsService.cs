@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using AngryPullRequests.Application.Github;
+using AngryPullRequests.Domain.Entities;
+using System.Threading.Tasks;
 
 namespace AngryPullRequests.Application.AngryPullRequests.Interfaces
 {
     public interface IAngryPullRequestsService
     {
-        Task CheckOutPullRequests(string repositoryName, string repositoryOwner);
+        Task CheckOutPullRequests(Repository repository, IPullRequestService pullRequestService);
     }
 }

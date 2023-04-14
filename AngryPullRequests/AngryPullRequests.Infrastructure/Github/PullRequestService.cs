@@ -26,17 +26,13 @@ namespace AngryPullRequests.Infrastructure.Github
             this.dbContext = dbContext;
         }
 
-        public async Task<IPullRequestService> Create(string repositoryName, string repositoryOwner)
+        public async Task<IPullRequestService> Create(Domain.Entities.Repository repository)
         {
             var mapper = lifetimeScope.Resolve<IMapper>();
 
-            var dbRepository = await dbContext.Repositories
-                .Include(r => r.AngryUser)
-                .FirstAsync(r => r.Name == repositoryName && r.Owner == repositoryOwner);
-
             var gitHubClient = new GitHubClient(new ProductHeaderValue("AngryPullRequests"))
             {
-                Credentials = new Credentials(dbRepository.AngryUser.UserName, dbRepository.AngryUser.GithubPat)
+                Credentials = new Credentials(repository.AngryUser.UserName, repository.AngryUser.GithubPat)
             };
 
             return new PullRequestService(mapper, gitHubClient);

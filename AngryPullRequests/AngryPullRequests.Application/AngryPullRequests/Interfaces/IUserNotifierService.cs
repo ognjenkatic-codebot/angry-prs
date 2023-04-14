@@ -1,4 +1,6 @@
 ﻿using AngryPullRequests.Application.AngryPullRequests.Models;
+using AngryPullRequests.Application.Github;
+using AngryPullRequests.Domain.Entities;
 using AngryPullRequests.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -9,6 +11,6 @@ namespace AngryPullRequests.Application.AngryPullRequests.Interfaces
 {
     public interface IUserNotifierService
     {
-        Task Notify(PullRequestNotificationGroup[] pullRequestNotificationGroups, string repositoryName, string repositoryOwner);
+        Task Notify(PullRequestNotificationGroup[] pullRequestNotificationGroups, Repository repository, IPullRequestService pullRequestService);
     }
 }

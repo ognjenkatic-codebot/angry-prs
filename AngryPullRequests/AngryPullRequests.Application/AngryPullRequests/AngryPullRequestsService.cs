@@ -14,34 +14,20 @@ namespace AngryPullRequests.Application.AngryPullRequests
 {
     public class AngryPullRequestsService : IAngryPullRequestsService
     {
-        private readonly IPullRequestServiceFactory pullRequestServiceFactory;
         private readonly IUserNotifierService userNotifierService;
-        private readonly IAngryPullRequestsContext dbContext;
 
-        public AngryPullRequestsService(
-            IPullRequestServiceFactory pullRequestServiceFactory,
-            IUserNotifierService userNotifierService,
-            IAngryPullRequestsContext dbContext
-        )
+        public AngryPullRequestsService(IUserNotifierService userNotifierService)
         {
-            this.pullRequestServiceFactory = pullRequestServiceFactory;
             this.userNotifierService = userNotifierService;
-            this.dbContext = dbContext;
         }
 
-        public async Task CheckOutPullRequests(string repositoryName, string repositoryOwner)
+        public async Task CheckOutPullRequests(Repository repository, IPullRequestService pullRequestService)
         {
-            var repository = await dbContext.Repositories
-                .Include(r => r.Characteristics)
-                .FirstAsync(r => r.Name == repositoryName && r.Owner == repositoryOwner);
-
-            var pullRequestService = await pullRequestServiceFactory.Create(repository.Name, repository.Owner);
-
             var notificationGroups = await GetNotificationGroups(repository.Name, repository.Owner, repository.Characteristics, pullRequestService);
 
             if (notificationGroups.Any())
             {
-                await userNotifierService.Notify(notificationGroups.ToArray(), repository.Name, repository.Owner);
+                await userNotifierService.Notify(notificationGroups.ToArray(), repository, pullRequestService);
             }
         }
 

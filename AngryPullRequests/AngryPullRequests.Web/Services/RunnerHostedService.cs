@@ -1,4 +1,5 @@
 ﻿using AngryPullRequests.Application.AngryPullRequests.Interfaces;
+using AngryPullRequests.Application.Github;
 using AngryPullRequests.Application.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,11 +10,17 @@ namespace AngryPullRequests.Web.Services
         private readonly CancellationTokenSource _tokenSource = new();
         private readonly Func<IAngryPullRequestsService> angryPullRequestServiceFactory;
         private readonly IAngryPullRequestsContext dbContext;
+        private readonly IPullRequestServiceFactory pullRequestServiceFactory;
 
-        public RunnerHostedService(Func<IAngryPullRequestsService> angryPullRequestServiceFactory, IAngryPullRequestsContext dbContext)
+        public RunnerHostedService(
+            Func<IAngryPullRequestsService> angryPullRequestServiceFactory,
+            IAngryPullRequestsContext dbContext,
+            IPullRequestServiceFactory pullRequestServiceFactory
+        )
         {
             this.angryPullRequestServiceFactory = angryPullRequestServiceFactory;
             this.dbContext = dbContext;
+            this.pullRequestServiceFactory = pullRequestServiceFactory;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -39,7 +46,12 @@ namespace AngryPullRequests.Web.Services
         private async Task Run()
         {
             var now = DateTimeOffset.UtcNow;
-            var repos = await dbContext.RunSchedules.Include(r => r.Repository).ToListAsync();
+            var repos = await dbContext.RunSchedules
+                .Include(r => r.Repository)
+                .ThenInclude(r => r.AngryUser)
+                .Include(r => r.Repository)
+                .ThenInclude(r => r.Characteristics)
+                .ToListAsync();
 
             var runTasks = new List<Task>();
 
@@ -50,7 +62,8 @@ namespace AngryPullRequests.Web.Services
 
                 if (isNow)
                 {
-                    runTasks.Add(angryPullRequestServiceFactory().CheckOutPullRequests(repo.Repository.Name, repo.Repository.Owner));
+                    var service = await pullRequestServiceFactory.Create(repo.Repository);
+                    runTasks.Add(angryPullRequestServiceFactory().CheckOutPullRequests(repo.Repository, service));
                 }
             }
 

@@ -1,4 +1,5 @@
-﻿using AngryPullRequests.Domain.Models;
+﻿using AngryPullRequests.Domain.Entities;
+using AngryPullRequests.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +9,7 @@ namespace AngryPullRequests.Application.Github
 {
     public interface IPullRequestServiceFactory
     {
-        Task<IPullRequestService> Create(string repositoryName, string repositoryOwner);
+        Task<IPullRequestService> Create(Repository repository);
     }
 
     public interface IPullRequestService

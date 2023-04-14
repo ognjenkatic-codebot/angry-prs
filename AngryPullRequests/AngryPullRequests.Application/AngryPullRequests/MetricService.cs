@@ -18,12 +18,12 @@ namespace AngryPullRequests.Application.AngryPullRequests
         private static int totalPrs = 0;
         private static SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
-        private readonly IPullRequestServiceFactory pullRequestServiceFactory;
         private static Dictionary<string, UserExperience> authorExperienceMap = new Dictionary<string, UserExperience>();
+        private readonly IPullRequestService pullRequestService;
 
-        public MetricService(IPullRequestServiceFactory pullRequestServiceFactory)
+        public MetricService(IPullRequestService pullRequestService)
         {
-            this.pullRequestServiceFactory = pullRequestServiceFactory;
+            this.pullRequestService = pullRequestService;
         }
 
         public int GetNumberOfPullRequests() => totalPrs;
@@ -31,7 +31,6 @@ namespace AngryPullRequests.Application.AngryPullRequests
         public async Task<Dictionary<string, UserExperience>> GetAuthorExperience(string repository, string owner, string author)
         {
             await _semaphore.WaitAsync();
-            var pullRequestService = await pullRequestServiceFactory.Create(repository, owner);
             var goNext = false;
             do
             {
