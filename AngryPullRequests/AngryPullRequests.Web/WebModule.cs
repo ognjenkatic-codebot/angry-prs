@@ -43,14 +43,6 @@ namespace AngryPullRequests.Web
             builder.RegisterType<OpenAiCompletionService>().As<ICompletionService>();
             builder.RegisterType<MetricService>().As<IMetricService>();
             builder.RegisterType<PullRequestService>().As<IPullRequestService>();
-            builder
-                .Register(c =>
-                {
-                    var tokenAuth = new Credentials("ognjenkatic", appConfiguration.RepositoryConfiguration.AccessToken);
-                    var client = new GitHubClient(new ProductHeaderValue("Test")) { Credentials = tokenAuth };
-                    return client;
-                })
-                .As<IGitHubClient>();
 
             builder.AddSlackNet(
                 c =>

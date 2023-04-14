@@ -20,26 +20,27 @@ namespace AngryPullRequests.Application.Services
 
         public async Task<SlashCommandResponse> Handle(SlashCommand command)
         {
-            if (forgottenPullRequestsMessageFormatter != null)
-            {
-                var groups = await angryPullRequestsService.GetNotificationGroups();
+            return await Task.FromResult(new SlashCommandResponse());
+            //if (forgottenPullRequestsMessageFormatter != null)
+            //{
+            //    var groups = await angryPullRequestsService.GetNotificationGroups();
 
-                var blocks = new List<Block>();
+            //    var blocks = new List<Block>();
 
-                blocks.AddRange(await forgottenPullRequestsMessageFormatter.GetBlocks(groups.ToArray()));
+            //    blocks.AddRange(await forgottenPullRequestsMessageFormatter.GetBlocks(groups.ToArray()));
 
-                return new SlashCommandResponse
-                {
-                    ResponseType = ResponseType.Ephemeral,
-                    Message = new SlackNet.WebApi.Message { Blocks = blocks, Channel = command.ChannelName }
-                };
-            }
+            //    return new SlashCommandResponse
+            //    {
+            //        ResponseType = ResponseType.Ephemeral,
+            //        Message = new SlackNet.WebApi.Message { Blocks = blocks, Channel = command.ChannelName }
+            //    };
+            //}
 
-            return new SlashCommandResponse
-            {
-                ResponseType = ResponseType.Ephemeral,
-                Message = new SlackNet.WebApi.Message { Text = "hello back", Channel = command.ChannelName }
-            };
+            //return new SlashCommandResponse
+            //{
+            //    ResponseType = ResponseType.Ephemeral,
+            //    Message = new SlackNet.WebApi.Message { Text = "hello back", Channel = command.ChannelName }
+            //};
         }
     }
 }

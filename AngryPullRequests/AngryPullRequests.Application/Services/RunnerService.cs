@@ -31,7 +31,8 @@ namespace AngryPullRequests.Application.Services
         private TimeSpan GetDelayToNextMinute()
         {
             var now = DateTimeOffset.UtcNow;
-            return new DateTimeOffset(now.Year, now.Month, now.Day, now.Hour, now.Minute + 1, 5, TimeSpan.Zero) - now;
+            var nowPlus = new DateTimeOffset(now.Year, now.Month, now.Day, now.Hour, now.Minute + 1, 5, TimeSpan.Zero);
+            return nowPlus - now;
         }
 
         private async Task Run()
@@ -42,9 +43,13 @@ namespace AngryPullRequests.Application.Services
             foreach (var repo in repos)
             {
                 var isNow = repo.TimeOfDay.Hour == now.Hour && repo.TimeOfDay.Minute == now.Minute;
-                Console.WriteLine(repo.Repository.Name);
+                isNow = true;
+
+                if (isNow)
+                {
+                    await angryPullRequestServiceFactory().CheckOutPullRequests(repo.Repository.Name, repo.Repository.Owner);
+                }
             }
-            //await angryPullRequestServiceFactory().CheckOutPullRequests();
         }
     }
 }
