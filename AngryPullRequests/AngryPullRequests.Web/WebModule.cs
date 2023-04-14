@@ -44,12 +44,12 @@ namespace AngryPullRequests.Web
             builder.RegisterType<MetricService>().As<IMetricService>();
             builder.RegisterType<PullRequestService>().As<IPullRequestService>();
 
-            builder.AddSlackNet(
-                c =>
-                    c.UseApiToken(appConfiguration.SlackConfiguration.ApiToken)
-                        .UseAppLevelToken(appConfiguration.SlackConfiguration.AccessToken)
-                        .RegisterSlashCommandHandler<AngrySlashCommandHandler>("/apr-all")
-            );
+            //builder.AddSlackNet(
+            //    c =>
+            //        c.UseApiToken(appConfiguration.SlackConfiguration.ApiToken)
+            //            .UseAppLevelToken(appConfiguration.SlackConfiguration.AccessToken)
+            //            .RegisterSlashCommandHandler<AngrySlashCommandHandler>("/apr-all")
+            //);
 
             builder.RegisterType<ForgottenPullRequestsMessageFormatter>().As<ISlackMessageFormatter>();
             builder.RegisterType<DeveloperLoadMessageFormatter>().As<ISlackMessageFormatter>();

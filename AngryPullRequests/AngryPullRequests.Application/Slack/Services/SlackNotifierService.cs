@@ -4,6 +4,7 @@ using AngryPullRequests.Application.Slack.Formatters;
 using AngryPullRequests.Domain.Models;
 using AngryPullRequests.Domain.Services;
 using AngryPullRequests.Infrastructure.Models;
+using Microsoft.EntityFrameworkCore;
 using SlackNet;
 using SlackNet.Blocks;
 using SlackNet.WebApi;
@@ -17,30 +18,30 @@ namespace AngryPullRequests.Application.Slack.Services
 {
     public class SlackNotifierService : IUserNotifierService
     {
-        private readonly ISlackApiClient slack;
         private readonly IEnumerable<ISlackMessageFormatter> messageFormatters;
-        private readonly SlackConfiguration slackConfiguration;
+        private readonly IAngryPullRequestsContext dbContext;
 
-        public SlackNotifierService(
-            ISlackApiClient slack,
-            IEnumerable<ISlackMessageFormatter> messageFormatters,
-            SlackConfiguration slackConfiguration
-        )
+        public SlackNotifierService(IEnumerable<ISlackMessageFormatter> messageFormatters, IAngryPullRequestsContext dbContext)
         {
-            this.slack = slack;
             this.messageFormatters = messageFormatters;
-            this.slackConfiguration = slackConfiguration;
+            this.dbContext = dbContext;
         }
 
-        public async Task Notify(PullRequestNotificationGroup[] pullRequestNotificationGroups)
+        public async Task Notify(PullRequestNotificationGroup[] pullRequestNotificationGroups, string repositoryName, string repositoryOwner)
         {
+            var dbRepository = await dbContext.Repositories
+                .Include(r => r.Characteristics)
+                .FirstAsync(r => r.Name == repositoryName && r.Owner == repositoryOwner);
+
+            var api = new SlackServiceBuilder().UseApiToken(dbRepository.Characteristics.SlackApiToken).GetApiClient();
+
             foreach (var formatter in messageFormatters)
             {
-                await slack.Chat.PostMessage(
+                await api.Chat.PostMessage(
                     new Message
                     {
                         Blocks = await formatter.GetBlocks(pullRequestNotificationGroups),
-                        Channel = slackConfiguration.NotificationsChannel
+                        Channel = dbRepository.Characteristics.SlackNotificationChannel
                     }
                 );
             }

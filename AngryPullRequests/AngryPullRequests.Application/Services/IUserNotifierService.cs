@@ -9,6 +9,6 @@ namespace AngryPullRequests.Application.Services
 {
     public interface IUserNotifierService
     {
-        Task Notify(PullRequestNotificationGroup[] pullRequestNotificationGroups);
+        Task Notify(PullRequestNotificationGroup[] pullRequestNotificationGroups, string repositoryName, string repositoryOwner);
     }
 }

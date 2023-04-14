@@ -37,7 +37,7 @@ namespace AngryPullRequests.Application.Services
 
             if (notificationGroups.Any())
             {
-                await userNotifierService.Notify(notificationGroups.ToArray());
+                await userNotifierService.Notify(notificationGroups.ToArray(), repository.Name, repository.Owner);
             }
         }
 
