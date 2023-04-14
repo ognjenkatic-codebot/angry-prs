@@ -13,7 +13,9 @@ namespace AngryPullRequests.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<AngryUser> builder)
         {
-            throw new NotImplementedException();
+            builder.HasMany(u => u.Repositories).WithOne(r => r.AngryUser).HasForeignKey(r => r.AngryUserId);
+            builder.HasKey(u => u.Id);
+            builder.Property(u => u.Id).HasDefaultValueSql("gen_random_uuid()");
         }
     }
 }

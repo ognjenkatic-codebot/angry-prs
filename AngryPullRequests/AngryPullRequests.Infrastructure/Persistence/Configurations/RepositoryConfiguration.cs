@@ -9,7 +9,8 @@ namespace AngryPullRequests.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Repository> builder)
         {
-            throw new NotImplementedException();
+            builder.HasKey(u => u.Id);
+            builder.Property(u => u.Id).HasDefaultValueSql("gen_random_uuid()");
         }
     }
 }

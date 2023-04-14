@@ -1,10 +1,6 @@
 ﻿using AngryPullRequests.Application.Services;
 using AngryPullRequests.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Reflection.Emit;
 using System.Reflection;
-using System.Text;
 using Microsoft.EntityFrameworkCore;
 
 namespace AngryPullRequests.Infrastructure.Persistence
