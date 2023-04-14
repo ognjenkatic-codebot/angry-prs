@@ -18,7 +18,7 @@ namespace AngryPullRequests.Domain.Entities
         public int LargePrChangeCount { get; set; }
         public int OldPrAgeInDays { get; set; }
         public int InactivePrAgeInDays { get; set; }
-        public float DeleteHeaveRatio { get; set; }
+        public float DeleteHeavyRatio { get; set; }
         public string SlackNotificationChannel { get; set; }
         public string SlackAccessToken { get; set; }
         public string SlackApiToken { get; set; }

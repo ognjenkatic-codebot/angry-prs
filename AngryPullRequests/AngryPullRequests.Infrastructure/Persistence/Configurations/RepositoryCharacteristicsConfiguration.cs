@@ -16,7 +16,7 @@ namespace AngryPullRequests.Infrastructure.Persistence.Configurations
             builder.Property(r => r.LargePrChangeCount).IsRequired();
             builder.Property(r => r.InactivePrAgeInDays).IsRequired();
             builder.Property(r => r.OldPrAgeInDays).IsRequired();
-            builder.Property(r => r.DeleteHeaveRatio).IsRequired();
+            builder.Property(r => r.DeleteHeavyRatio).IsRequired();
             builder.Property(r => r.PullRequestNameCaptureRegex).IsRequired();
             builder.Property(r => r.PullRequestNameRegex).IsRequired();
             builder.Property(r => r.ReleaseTagRegex).IsRequired();
