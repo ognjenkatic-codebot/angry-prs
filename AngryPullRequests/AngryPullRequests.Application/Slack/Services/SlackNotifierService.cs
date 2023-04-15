@@ -11,6 +11,7 @@ using SlackNet.WebApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -35,16 +36,14 @@ namespace AngryPullRequests.Application.Slack.Services
         {
             var api = new SlackServiceBuilder().UseApiToken(repository.Characteristics.SlackApiToken).GetApiClient();
 
+            var blocks = new List<Block>();
+
             foreach (var formatter in messageFormatters)
             {
-                await api.Chat.PostMessage(
-                    new Message
-                    {
-                        Blocks = await formatter.GetBlocks(pullRequestNotificationGroups, repository),
-                        Channel = repository.Characteristics.SlackNotificationChannel
-                    }
-                );
+                blocks.AddRange(await formatter.GetBlocks(pullRequestNotificationGroups, repository));
             }
+
+            await api.Chat.PostMessage(new Message { Blocks = blocks, Channel = repository.Characteristics.SlackNotificationChannel });
         }
     }
 }
