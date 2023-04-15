@@ -58,7 +58,7 @@ namespace AngryPullRequests.Web.Services
             foreach (var repo in repos)
             {
                 var isNow = repo.TimeOfDay.Hour == now.Hour && repo.TimeOfDay.Minute == now.Minute;
-                isNow = true;
+                //isNow = true;
 
                 if (isNow)
                 {
