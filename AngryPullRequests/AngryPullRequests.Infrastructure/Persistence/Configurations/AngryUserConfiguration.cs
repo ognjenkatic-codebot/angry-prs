@@ -16,6 +16,9 @@ namespace AngryPullRequests.Infrastructure.Persistence.Configurations
             builder.HasMany(u => u.Repositories).WithOne(r => r.AngryUser).HasForeignKey(r => r.AngryUserId);
             builder.HasKey(u => u.Id);
             builder.Property(u => u.Id).HasDefaultValueSql("gen_random_uuid()");
+
+            builder.Property(u => u.UserName).IsRequired();
+            builder.Property(u => u.Name).IsRequired();
         }
     }
 }
