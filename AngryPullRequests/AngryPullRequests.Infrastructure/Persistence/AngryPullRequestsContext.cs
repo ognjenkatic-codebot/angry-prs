@@ -2,6 +2,7 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using AngryPullRequests.Application.Persistence;
+using System.Threading.Tasks;
 
 namespace AngryPullRequests.Infrastructure.Persistence
 {

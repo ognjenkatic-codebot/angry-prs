@@ -1,7 +1,9 @@
+using AngryPullRequests.Application.Persistence;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Octokit;
 using System.Security.Claims;
 
@@ -9,6 +11,13 @@ namespace AngryPullRequests.Web.Pages
 {
     public class LoginModel : PageModel
     {
+        private readonly IAngryPullRequestsContext dbContext;
+
+        public LoginModel(IAngryPullRequestsContext dbContext)
+        {
+            this.dbContext = dbContext;
+        }
+
         public IActionResult OnGet()
         {
             if (HttpContext.User.Identity?.IsAuthenticated == true)
@@ -32,12 +41,17 @@ namespace AngryPullRequests.Web.Pages
 
                 var pt = await gitHubClient.User.Current();
 
+                var username = pt.Login;
+                var avatarUrl = pt.AvatarUrl ?? "";
+                var githubProfile = pt.HtmlUrl;
+                var name = pt.Name ?? "";
+
                 var claims = new List<Claim>
                 {
-                    new Claim("AvatarUrl", pt.AvatarUrl ?? ""),
-                    new Claim("Username", pt.Login),
-                    new Claim("GithubProfile", pt.Url),
-                    new Claim(ClaimTypes.Name, pt.Name ?? "")
+                    new Claim("AvatarUrl", avatarUrl),
+                    new Claim("Username", username),
+                    new Claim("GithubProfile", githubProfile),
+                    new Claim(ClaimTypes.Name, name)
                 };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -67,6 +81,33 @@ namespace AngryPullRequests.Web.Pages
                 };
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+
+                var dbUser = await dbContext.Users.FirstOrDefaultAsync(u => u.UserName == username);
+
+                if (dbUser is null)
+                {
+                    dbUser = new Domain.Entities.AngryUser
+                    {
+                        UserName = username,
+                        GithubAvatarUrl = avatarUrl,
+                        GithubPat = pat,
+                        Name = name,
+                        Status = "Initialized",
+                        GithubProfile = githubProfile
+                    };
+
+                    dbContext.Users.Add(dbUser);
+                }
+                else
+                {
+                    dbUser.UserName = username;
+                    dbUser.GithubAvatarUrl = avatarUrl;
+                    dbUser.GithubPat = pat;
+                    dbUser.Name = name;
+                    dbUser.GithubProfile = githubProfile;
+                }
+
+                await dbContext.SaveChangesAsync(new CancellationTokenSource().Token);
 
                 if (!string.IsNullOrEmpty(returnUrl))
                 {

@@ -1,5 +1,7 @@
 ﻿using AngryPullRequests.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AngryPullRequests.Application.Persistence
 {
@@ -8,5 +10,7 @@ namespace AngryPullRequests.Application.Persistence
         DbSet<AngryUser> Users { get; set; }
         DbSet<Repository> Repositories { get; set; }
         DbSet<RunSchedule> RunSchedules { get; set; }
+
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }
