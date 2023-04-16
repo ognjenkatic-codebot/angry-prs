@@ -1,7 +1,8 @@
 ﻿using AngryPullRequests.Application.AngryPullRequests;
-using AngryPullRequests.Application.AngryPullRequests.Interfaces;
+using AngryPullRequests.Application.AngryPullRequests.Common.Interfaces;
 using AngryPullRequests.Application.Completion;
 using AngryPullRequests.Application.Github;
+using AngryPullRequests.Application.Persistence;
 using AngryPullRequests.Application.Slack.Formatters;
 using AngryPullRequests.Application.Slack.Services;
 using AngryPullRequests.Infrastructure.Common;
@@ -10,8 +11,10 @@ using AngryPullRequests.Infrastructure.OpenAi;
 using AngryPullRequests.Web.Services;
 using Autofac;
 using AutoMapper.Contrib.Autofac.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using Octokit;
 using SlackNet.Autofac;
+using System.Security.Claims;
 
 namespace AngryPullRequests.Web
 {
@@ -21,7 +24,7 @@ namespace AngryPullRequests.Web
         {
             base.Load(builder);
 
-            builder.RegisterAutoMapper(typeof(AutoMapperProfile).Assembly);
+            //builder.RegisterAutoMapper(typeof(AutoMapperProfile).Assembly);
 
             builder.RegisterType<RunnerHostedService>().As<IHostedService>();
             builder.RegisterType<AngryPullRequestsService>().As<IAngryPullRequestsService>();
@@ -32,6 +35,8 @@ namespace AngryPullRequests.Web
 
             builder.RegisterType<ForgottenPullRequestsMessageFormatter>().As<ISlackMessageFormatter>();
             builder.RegisterType<DeveloperLoadMessageFormatter>().As<ISlackMessageFormatter>();
+
+            builder.RegisterType<UserService>().As<IUserService>();
         }
     }
 }

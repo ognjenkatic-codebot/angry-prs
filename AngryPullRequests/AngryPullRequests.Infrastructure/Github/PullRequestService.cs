@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Octokit;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,6 +35,15 @@ namespace AngryPullRequests.Infrastructure.Github
             {
                 Credentials = new Credentials(repository.AngryUser.UserName, repository.AngryUser.GithubPat)
             };
+
+            return new PullRequestService(mapper, gitHubClient);
+        }
+
+        public async Task<IPullRequestService> Create(string pat)
+        {
+            var mapper = lifetimeScope.Resolve<IMapper>();
+
+            var gitHubClient = new GitHubClient(new ProductHeaderValue("AngryPullRequests")) { Credentials = new Credentials(pat) };
 
             return new PullRequestService(mapper, gitHubClient);
         }
@@ -103,6 +113,13 @@ namespace AngryPullRequests.Infrastructure.Github
             var pullRequest = await gitHubClient.PullRequest.Get(owner, repository, pullRequestNumber);
 
             return mapper.Map<Domain.Models.PullRequest>(pullRequest);
+        }
+
+        public async Task<Domain.Entities.Repository[]> GetCurrentUserRepositories()
+        {
+            var repos = await gitHubClient.Repository.GetAllForCurrent();
+
+            return repos.Select(repo => new Domain.Entities.Repository { Name = repo.Name, Owner = repo.Owner.Login }).ToArray();
         }
     }
 }

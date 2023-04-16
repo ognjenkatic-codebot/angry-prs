@@ -6,10 +6,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AngryPullRequests.Application.Persistence;
-using AngryPullRequests.Application.AngryPullRequests.Interfaces;
 using AngryPullRequests.Application.AngryPullRequests;
-using AngryPullRequests.Application.AngryPullRequests.Models;
 using AngryPullRequests.Domain.Entities;
+using AngryPullRequests.Application.AngryPullRequests.Common.Models;
 
 namespace AngryPullRequests.Application.Slack.Formatters
 {

@@ -1,5 +1,5 @@
-﻿using AngryPullRequests.Application.AngryPullRequests.Interfaces;
-using AngryPullRequests.Application.AngryPullRequests.Models;
+﻿using AngryPullRequests.Application.AngryPullRequests.Common.Interfaces;
+using AngryPullRequests.Application.AngryPullRequests.Common.Models;
 using AngryPullRequests.Application.Github;
 using AngryPullRequests.Application.Persistence;
 using AngryPullRequests.Domain.Entities;

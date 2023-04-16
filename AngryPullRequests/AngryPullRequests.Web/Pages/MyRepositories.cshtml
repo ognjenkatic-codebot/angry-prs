@@ -1,0 +1,18 @@
+﻿@page
+@model AngryPullRequests.Web.Pages.MyRepositoriesModel
+@{
+}
+
+<div class="container">
+    <h1>GitHub Repositories</h1>
+    <ul class="list-group">
+        @foreach (var repo in Model.Repositories)
+        {
+            <li class="list-group-item">
+                <a href="/Repository/@repo.Id">@repo.Name</a>
+            </li>
+        }
+    </ul>
+
+    <a href="/NewRepository" class="btn btn-primary">Add Repository</a>
+</div>

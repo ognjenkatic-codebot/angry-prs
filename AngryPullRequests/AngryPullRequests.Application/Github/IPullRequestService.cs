@@ -10,6 +10,7 @@ namespace AngryPullRequests.Application.Github
     public interface IPullRequestServiceFactory
     {
         Task<IPullRequestService> Create(Repository repository);
+        Task<IPullRequestService> Create(string pat);
     }
 
     public interface IPullRequestService
@@ -18,5 +19,6 @@ namespace AngryPullRequests.Application.Github
         Task<User[]> GetRequestedReviewersUsers(string owner, string repository, int pullRequestNumber);
         Task<PullRequestReview[]> GetPullRequsetReviews(string owner, string repository, int pullRequestNumber);
         Task<PullRequest> GetPullRequestDetails(string owner, string repository, int pullRequestNumber);
+        Task<Domain.Entities.Repository[]> GetCurrentUserRepositories();
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AngryPullRequests.Application.AngryPullRequests.Interfaces
+namespace AngryPullRequests.Application.AngryPullRequests.Common.Interfaces
 {
     public interface IMetricService
     {

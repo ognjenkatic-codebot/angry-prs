@@ -1,0 +1,105 @@
+﻿@page
+@model AngryPullRequests.Web.Pages.NewRepositoryModel
+@{
+}
+<div class="container">
+    <h1>Repository Information</h1>
+
+    @*
+    <div class="text-center mb-4">
+    <a href="@Model.GithubProfile"><img src="@Model.AvatarUrl" alt="Avatar" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;"></a>
+    </div>*@
+
+    <form method="post">
+
+        <div>
+            <label asp-for="Repository.Name">Name</label>
+            <input asp-for="Repository.Name" value="@Model.Repository?.Name" />
+        </div>
+
+        <div>
+            <label asp-for="Repository.Owner">Owner</label>
+            <input asp-for="Repository.Owner" value="@Model.Repository?.Owner" />
+        </div>
+
+        <h3>Run Schedule</h3>
+        <div>
+            <label asp-for="Repository.TimeOfDay">Time of Day</label>
+            <input asp-for="Repository.TimeOfDay" type="time" value="@Model.Repository.TimeOfDay" />
+        </div>
+
+        <h3>Repository Characteristics</h3>
+        <div>
+            <label asp-for="Repository.PullRequestNameRegex">Pull Request Name Regex</label>
+            <input asp-for="Repository.PullRequestNameRegex" value="@Model.Repository.PullRequestNameRegex" />
+        </div>
+
+        <div>
+            <label asp-for="Repository.PullRequestNameCaptureRegex">Pull Request Name Capture Regex</label>
+            <input asp-for="Repository.PullRequestNameCaptureRegex" value="@Model.Repository.PullRequestNameCaptureRegex" />
+        </div>
+
+        <div>
+            <label asp-for="Repository.ReleaseTagRegex">Release Tag Regex</label>
+            <input asp-for="Repository.ReleaseTagRegex" value="@Model.Repository.ReleaseTagRegex" />
+        </div>
+
+        <div>
+            <label asp-for="Repository.InProgressLabel">In Progress Label</label>
+            <input asp-for="Repository.InProgressLabel" value="@Model.Repository.InProgressLabel" />
+        </div>
+
+        <div>
+            <label asp-for="Repository.SmallPrChangeCount">Small PR Change Count</label>
+            <input asp-for="Repository.SmallPrChangeCount" value="@Model.Repository.SmallPrChangeCount" />
+        </div>
+
+        <div>
+            <label asp-for="Repository.LargePrChangeCount">Large PR Change Count</label>
+            <input asp-for="Repository.LargePrChangeCount" value="@Model.Repository.LargePrChangeCount" />
+        </div>
+
+        <div>
+            <label asp-for="Repository.OldPrAgeInDays">Old PR Age In Days</label>
+            <input asp-for="Repository.OldPrAgeInDays" value="@Model.Repository.OldPrAgeInDays" />
+        </div>
+
+        <div>
+            <label asp-for="Repository.InactivePrAgeInDays">Inactive PR Age In Days</label>
+            <input asp-for="Repository.InactivePrAgeInDays" value="@Model.Repository.InactivePrAgeInDays" />
+        </div>
+
+        <div>
+            <label asp-for="Repository.DeleteHeavyRatio">Delete Heavy Ratio</label>
+            <input asp-for="Repository.DeleteHeavyRatio" value="@Model.Repository.DeleteHeavyRatio" />
+        </div>
+
+        <div>
+            <label asp-for="Repository.SlackNotificationChannel">Slack Notification Channel</label>
+            <input asp-for="Repository.SlackNotificationChannel" value="@Model.Repository.SlackNotificationChannel" />
+        </div>
+
+        <div>
+            <label asp-for="Repository.SlackAccessToken">Slack Access Token</label>
+            <input asp-for="Repository.SlackAccessToken" value="@Model.Repository.SlackAccessToken" />
+        </div>
+
+        <div>
+            <label asp-for="Repository.SlackApiToken">Slack API Token</label>
+            <input asp-for="Repository.SlackApiToken" value="@Model.Repository.SlackApiToken" />
+        </div>
+
+        <div>
+            <label asp-for="Repository.IssueBaseUrl">Issue Base URL</label>
+            <input asp-for="Repository.IssueBaseUrl" value="@Model.Repository.IssueBaseUrl" />
+        </div>
+
+        <div>
+            <label asp-for="Repository.IssueRegex">Issue Regex</label>
+            <input asp-for="Repository.IssueRegex" value="@Model.Repository.IssueRegex" />
+        </div>
+
+        <button type="submit">Save</button>
+    </form>
+</div>
+

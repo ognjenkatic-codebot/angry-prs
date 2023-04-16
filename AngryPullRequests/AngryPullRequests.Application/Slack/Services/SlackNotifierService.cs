@@ -1,5 +1,5 @@
-﻿using AngryPullRequests.Application.AngryPullRequests.Interfaces;
-using AngryPullRequests.Application.AngryPullRequests.Models;
+﻿using AngryPullRequests.Application.AngryPullRequests.Common.Interfaces;
+using AngryPullRequests.Application.AngryPullRequests.Common.Models;
 using AngryPullRequests.Application.Github;
 using AngryPullRequests.Application.Persistence;
 using AngryPullRequests.Application.Slack.Formatters;
@@ -42,6 +42,20 @@ namespace AngryPullRequests.Application.Slack.Services
             {
                 blocks.AddRange(await formatter.GetBlocks(pullRequestNotificationGroups, repository));
             }
+
+            await api.Chat.PostMessage(new Message { Blocks = blocks, Channel = repository.Characteristics.SlackNotificationChannel });
+        }
+
+        public async Task SendTestMessage(Repository repository)
+        {
+            var api = new SlackServiceBuilder().UseApiToken(repository.Characteristics.SlackApiToken).GetApiClient();
+            var blocks = new List<Block>
+            {
+                new HeaderBlock
+                {
+                    Text = new PlainText() { Text = "Sve ok", Emoji = true }
+                }
+            };
 
             await api.Chat.PostMessage(new Message { Blocks = blocks, Channel = repository.Characteristics.SlackNotificationChannel });
         }

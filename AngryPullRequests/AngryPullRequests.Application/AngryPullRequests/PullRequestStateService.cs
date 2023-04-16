@@ -1,4 +1,4 @@
-﻿using AngryPullRequests.Application.AngryPullRequests.Interfaces;
+﻿using AngryPullRequests.Application.AngryPullRequests.Common.Interfaces;
 using AngryPullRequests.Domain.Entities;
 using AngryPullRequests.Domain.Models;
 using System;

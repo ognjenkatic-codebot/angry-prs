@@ -1,9 +1,13 @@
+using AngryPullRequests.Application.AngryPullRequests.Commands;
 using AngryPullRequests.Infrastructure;
 using AngryPullRequests.Infrastructure.Persistence;
 using AngryPullRequests.Web;
+using AngryPullRequests.Web.Util.Mappings;
 using Autofac;
+using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +25,9 @@ builder.Services
         opt.LogoutPath = "/logout";
         opt.LoginPath = "/login";
     });
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateRepositoryCommand).Assembly));
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 

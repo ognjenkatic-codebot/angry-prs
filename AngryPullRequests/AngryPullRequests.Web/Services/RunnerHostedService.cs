@@ -1,4 +1,4 @@
-﻿using AngryPullRequests.Application.AngryPullRequests.Interfaces;
+﻿using AngryPullRequests.Application.AngryPullRequests.Common.Interfaces;
 using AngryPullRequests.Application.Github;
 using AngryPullRequests.Application.Persistence;
 using Microsoft.EntityFrameworkCore;

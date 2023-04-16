@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AngryPullRequests.Application.AngryPullRequests.Models
+namespace AngryPullRequests.Application.AngryPullRequests.Common.Models
 {
     public class PullRequestNotificationGroup
     {
