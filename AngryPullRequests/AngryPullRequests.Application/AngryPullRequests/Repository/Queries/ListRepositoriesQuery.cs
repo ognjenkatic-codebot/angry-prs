@@ -29,7 +29,11 @@ namespace AngryPullRequests.Application.AngryPullRequests.Queries
 
             public async Task<List<Repository>> Handle(ListRepositoriesQuery request, CancellationToken cancellationToken)
             {
-                var query = _dbContext.Repositories.Include(r => r.RunSchedule).Include(r => r.AngryUser).AsQueryable();
+                var query = _dbContext.Repositories
+                    .Include(r => r.RunSchedule)
+                    .Include(r => r.Characteristics)
+                    .Include(r => r.AngryUser)
+                    .AsQueryable();
 
                 if (!request.GetAll)
                 {

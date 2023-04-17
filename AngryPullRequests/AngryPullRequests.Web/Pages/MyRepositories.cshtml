@@ -4,15 +4,29 @@
 }
 
 <div class="container">
-    <h1>GitHub Repositories</h1>
-    <ul class="list-group">
-        @foreach (var repo in Model.Repositories)
-        {
-            <li class="list-group-item">
-                <a href="/Repository/@repo.Id">@repo.Name</a>
-            </li>
-        }
-    </ul>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Owner</th>
+                <th>Angry User</th>
+                <th>Time of day</th>
+                <th>Slack channel</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var repository in Model.Repositories)
+            {
+                <tr>
+                    <td><a href="/Repository/@repository.Id">@repository.Name</a></td>
+                    <td>@repository.Owner</td>
+                    <td>@repository.AngryUser.UserName</td>
+                    <td>@repository.RunSchedule.TimeOfDay</td>
+                    <td>@repository.Characteristics.SlackNotificationChannel</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
     <a href="/NewRepository" class="btn btn-primary">Add Repository</a>
 </div>
