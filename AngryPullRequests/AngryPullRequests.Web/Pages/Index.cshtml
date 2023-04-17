@@ -20,7 +20,9 @@
                 <tr>
                     <td>@repository.Name</td>
                     <td>@repository.Owner</td>
-                    <td>@repository.AngryUser</td>
+                    <td>
+                        @repository.AngryUser<a href="@repository.UserGithubProfile"><img src="@repository.UserAvatar" alt="Avatar" class="rounded-circle img-thumbnail" style="width: 25px; height: 25px; object-fit: cover; margin-left:5px;"></a>
+                    </td>
                     <td>@repository.TimeOfDay</td>
                 </tr>
             }

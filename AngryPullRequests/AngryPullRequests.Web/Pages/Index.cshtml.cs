@@ -10,6 +10,8 @@ namespace AngryPullRequests.Web.Pages
         public string Owner { get; set; }
         public string AngryUser { get; set; }
         public TimeOnly TimeOfDay { get; set; }
+        public string UserAvatar { get; set; }
+        public string UserGithubProfile { get; set; }
     }
 
     public class IndexModel : PageModel
@@ -35,7 +37,9 @@ namespace AngryPullRequests.Web.Pages
                             Name = r.Name,
                             Owner = r.Owner,
                             AngryUser = r.AngryUser.Name,
-                            TimeOfDay = r.RunSchedule.TimeOfDay
+                            TimeOfDay = r.RunSchedule.TimeOfDay,
+                            UserAvatar = r.AngryUser.GithubAvatarUrl,
+                            UserGithubProfile = r.AngryUser.GithubProfile
                         }
                 )
                 .ToList();
