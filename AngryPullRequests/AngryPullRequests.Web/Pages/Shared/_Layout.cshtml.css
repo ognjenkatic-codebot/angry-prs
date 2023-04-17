@@ -46,3 +46,12 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
+
+.my-navbar{
+   height:64px;
+}
+
+.my-navbar-content {
+    margin-left: 5px;
+    margin-right: 5px;
+}

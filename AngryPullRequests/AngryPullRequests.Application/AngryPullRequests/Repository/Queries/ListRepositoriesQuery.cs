@@ -14,6 +14,8 @@ namespace AngryPullRequests.Application.AngryPullRequests.Queries
 {
     public class ListRepositoriesQuery : IRequest<List<Repository>>
     {
+        public bool GetAll { get; set; }
+
         public class Handler : IRequestHandler<ListRepositoriesQuery, List<Repository>>
         {
             private readonly IAngryPullRequestsContext _dbContext;
@@ -27,9 +29,15 @@ namespace AngryPullRequests.Application.AngryPullRequests.Queries
 
             public async Task<List<Repository>> Handle(ListRepositoriesQuery request, CancellationToken cancellationToken)
             {
-                var user = await userService.GetCurrentUser();
+                var query = _dbContext.Repositories.Include(r => r.RunSchedule).Include(r => r.AngryUser).AsQueryable();
 
-                return await _dbContext.Repositories.Where(r => r.AngryUserId == user.Id).ToListAsync(cancellationToken: cancellationToken);
+                if (!request.GetAll)
+                {
+                    var user = await userService.GetCurrentUser();
+                    query = query.Where(r => r.AngryUserId == user.Id);
+                }
+
+                return await query.ToListAsync(cancellationToken: cancellationToken);
             }
         }
     }

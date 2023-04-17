@@ -15,93 +15,108 @@
         <div>
             <label asp-for="Repository.Name">Name</label>
             <input asp-for="Repository.Name" value="@Model.Repository?.Name" />
+            <span asp-validation-for="Repository.Name"></span>
         </div>
 
         <div>
             <label asp-for="Repository.Owner">Owner</label>
             <input asp-for="Repository.Owner" value="@Model.Repository?.Owner" />
+            <span asp-validation-for="Repository.Owner"></span>
         </div>
 
         <h3>Run Schedule</h3>
         <div>
             <label asp-for="Repository.TimeOfDay">Time of Day</label>
             <input asp-for="Repository.TimeOfDay" type="time" value="@Model.Repository.TimeOfDay" />
+            <span asp-validation-for="Repository.TimeOfDay"></span>
         </div>
 
         <h3>Repository Characteristics</h3>
         <div>
             <label asp-for="Repository.PullRequestNameRegex">Pull Request Name Regex</label>
             <input asp-for="Repository.PullRequestNameRegex" value="@Model.Repository.PullRequestNameRegex" />
+            <span asp-validation-for="Repository.PullRequestNameRegex"></span>
         </div>
 
         <div>
             <label asp-for="Repository.PullRequestNameCaptureRegex">Pull Request Name Capture Regex</label>
             <input asp-for="Repository.PullRequestNameCaptureRegex" value="@Model.Repository.PullRequestNameCaptureRegex" />
+            <span asp-validation-for="Repository.PullRequestNameCaptureRegex"></span>
         </div>
 
         <div>
             <label asp-for="Repository.ReleaseTagRegex">Release Tag Regex</label>
             <input asp-for="Repository.ReleaseTagRegex" value="@Model.Repository.ReleaseTagRegex" />
+            <span asp-validation-for="Repository.ReleaseTagRegex"></span>
         </div>
 
         <div>
             <label asp-for="Repository.InProgressLabel">In Progress Label</label>
             <input asp-for="Repository.InProgressLabel" value="@Model.Repository.InProgressLabel" />
+            <span asp-validation-for="Repository.InProgressLabel"></span>
         </div>
 
         <div>
             <label asp-for="Repository.SmallPrChangeCount">Small PR Change Count</label>
             <input asp-for="Repository.SmallPrChangeCount" value="@Model.Repository.SmallPrChangeCount" />
+            <span asp-validation-for="Repository.SmallPrChangeCount"></span>
         </div>
 
         <div>
             <label asp-for="Repository.LargePrChangeCount">Large PR Change Count</label>
             <input asp-for="Repository.LargePrChangeCount" value="@Model.Repository.LargePrChangeCount" />
+            <span asp-validation-for="Repository.LargePrChangeCount"></span>
         </div>
 
         <div>
             <label asp-for="Repository.OldPrAgeInDays">Old PR Age In Days</label>
             <input asp-for="Repository.OldPrAgeInDays" value="@Model.Repository.OldPrAgeInDays" />
+            <span asp-validation-for="Repository.OldPrAgeInDays"></span>
         </div>
 
         <div>
             <label asp-for="Repository.InactivePrAgeInDays">Inactive PR Age In Days</label>
             <input asp-for="Repository.InactivePrAgeInDays" value="@Model.Repository.InactivePrAgeInDays" />
+            <span asp-validation-for="Repository.InactivePrAgeInDays"></span>
         </div>
 
         <div>
             <label asp-for="Repository.DeleteHeavyRatio">Delete Heavy Ratio</label>
             <input asp-for="Repository.DeleteHeavyRatio" value="@Model.Repository.DeleteHeavyRatio" />
+            <span asp-validation-for="Repository.DeleteHeavyRatio"></span>
         </div>
 
         <div>
             <label asp-for="Repository.SlackNotificationChannel">Slack Notification Channel</label>
             <input asp-for="Repository.SlackNotificationChannel" value="@Model.Repository.SlackNotificationChannel" />
+            <span asp-validation-for="Repository.SlackNotificationChannel"></span>
         </div>
 
         <div>
             <label asp-for="Repository.SlackAccessToken">Slack Access Token</label>
             <input asp-for="Repository.SlackAccessToken" value="@Model.Repository.SlackAccessToken" />
+            <span asp-validation-for="Repository.SlackAccessToken"></span>
         </div>
 
         <div>
             <label asp-for="Repository.SlackApiToken">Slack API Token</label>
             <input asp-for="Repository.SlackApiToken" value="@Model.Repository.SlackApiToken" />
+            <span asp-validation-for="Repository.SlackApiToken"></span>
         </div>
 
         <div>
             <label asp-for="Repository.IssueBaseUrl">Issue Base URL</label>
             <input asp-for="Repository.IssueBaseUrl" value="@Model.Repository.IssueBaseUrl" />
+            <span asp-validation-for="Repository.IssueBaseUrl"></span>
         </div>
 
         <div>
             <label asp-for="Repository.IssueRegex">Issue Regex</label>
             <input asp-for="Repository.IssueRegex" value="@Model.Repository.IssueRegex" />
+            <span asp-validation-for="Repository.IssueRegex"></span>
         </div>
 
         <button type="submit">Save</button>
-        <button asp-page-handler="SlackTest">Slack Check</button>
-        <button asp-page-handler="GithubTest">Github Check</button>
     </form>
 </div>
 

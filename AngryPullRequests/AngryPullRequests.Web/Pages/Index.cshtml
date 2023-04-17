@@ -4,7 +4,27 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container">
+    <h1>Tracked Repositories</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Owner</th>
+                <th>Angry User</th>
+                <th>Time of day</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var repository in Model.Repositories)
+            {
+                <tr>
+                    <td>@repository.Name</td>
+                    <td>@repository.Owner</td>
+                    <td>@repository.AngryUser</td>
+                    <td>@repository.TimeOfDay</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>

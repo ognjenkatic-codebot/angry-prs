@@ -1,3 +1,4 @@
+using AngryPullRequests.Application.AngryPullRequests.Common.Exceptions;
 using AngryPullRequests.Application.AngryPullRequests.Common.Interfaces;
 using AngryPullRequests.Application.Github;
 using AngryPullRequests.Application.Persistence;
@@ -31,7 +32,7 @@ namespace AngryPullRequests.Application.AngryPullRequests.Commands
 
                 var pullRequestService = await pullRequestServiceFactory.Create(currentUser.GithubPat);
 
-                var prs = await pullRequestService.GetPullRequests(request.RepositoryOwner, request.RepositoryName, false, 1,1,1);
+                var prs = await pullRequestService.GetPullRequests(request.RepositoryOwner, request.RepositoryName, false, 1, 1, 1);
             }
         }
     }

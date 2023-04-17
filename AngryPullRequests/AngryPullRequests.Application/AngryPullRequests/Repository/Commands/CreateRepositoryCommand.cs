@@ -1,10 +1,13 @@
+using AngryPullRequests.Application.AngryPullRequests.Common.Exceptions;
 using AngryPullRequests.Application.AngryPullRequests.Common.Interfaces;
 using AngryPullRequests.Application.Github;
 using AngryPullRequests.Application.Persistence;
 using AngryPullRequests.Domain.Entities;
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -36,14 +39,16 @@ namespace AngryPullRequests.Application.AngryPullRequests.Commands
             private readonly IUserService userService;
             private readonly IUserNotifierService userNotifierService;
             private readonly IPullRequestServiceFactory pullRequestServiceFactory;
+            private readonly IMediator mediator;
 
-            public Handler(IAngryPullRequestsContext dbContext, IMapper mapper, IUserService userService, IUserNotifierService userNotifierService, IPullRequestServiceFactory pullRequestServiceFactory)
+            public Handler(IAngryPullRequestsContext dbContext, IMapper mapper, IUserService userService, IUserNotifierService userNotifierService, IPullRequestServiceFactory pullRequestServiceFactory, IMediator mediator)
             {
                 _dbContext = dbContext;
                 this.mapper = mapper;
                 this.userService = userService;
                 this.userNotifierService = userNotifierService;
                 this.pullRequestServiceFactory = pullRequestServiceFactory;
+                this.mediator = mediator;
             }
 
             public async Task<Repository> Handle(CreateRepositoryCommand request, CancellationToken cancellationToken)
@@ -54,8 +59,17 @@ namespace AngryPullRequests.Application.AngryPullRequests.Commands
 
                 var pullRequestService = await pullRequestServiceFactory.Create(currentUser.GithubPat);
 
-                var prs = await pullRequestService.GetPullRequests(repository.Owner, repository.Name, false, 1,1,1);
-                await userNotifierService.SendTestMessage(repository.Characteristics.SlackApiToken, repository.Characteristics.SlackNotificationChannel, "Test message");
+                // TODO: Move validation to fluent
+
+                var conflictingRepoExists = await _dbContext.Repositories.FirstOrDefaultAsync(r => r.Name == request.Name && r.Owner == request.Owner);
+
+                if (conflictingRepoExists is not null)
+                {
+                    throw new RepositoryExists("Repository already exists");
+                }
+
+                await mediator.Send(new FetchTestGithubCommand { RepositoryName = request.Name, RepositoryOwner = request.Owner }, cancellationToken);
+                await mediator.Send(new SendTestSlackMessageCommand { ApiToken = request.SlackApiToken, SlackNotificationChannel = request.SlackNotificationChannel }, cancellationToken);
 
                 repository.AngryUser = currentUser;
 
