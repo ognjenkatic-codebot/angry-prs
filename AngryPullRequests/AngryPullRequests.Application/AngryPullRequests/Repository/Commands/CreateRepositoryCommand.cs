@@ -55,7 +55,8 @@ namespace AngryPullRequests.Application.AngryPullRequests.Commands
                 var pullRequestService = await pullRequestServiceFactory.Create(currentUser.GithubPat);
 
                 var prs = await pullRequestService.GetPullRequests(repository.Owner, repository.Name, false, 1,1,1);
-                await userNotifierService.SendTestMessage(repository);
+                await userNotifierService.SendTestMessage(repository.Characteristics.SlackApiToken, repository.Characteristics.SlackNotificationChannel, "Test message");
+
                 repository.AngryUser = currentUser;
 
                 await _dbContext.Repositories.AddAsync(repository, cancellationToken);

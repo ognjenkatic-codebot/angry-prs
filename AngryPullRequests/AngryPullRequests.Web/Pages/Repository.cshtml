@@ -16,12 +16,12 @@
 
         <div>
             <label asp-for="Repository.Name">Name</label>
-            <input asp-for="Repository.Name" value="@Model.Repository?.Name" />
+            <input asp-for="Repository.Name" value="@Model.Repository?.Name" readonly/>
         </div>
 
         <div>
             <label asp-for="Repository.Owner">Owner</label>
-            <input asp-for="Repository.Owner" value="@Model.Repository?.Owner" />
+            <input asp-for="Repository.Owner" value="@Model.Repository?.Owner" readonly/>
         </div>
 
         <h3>Run Schedule</h3>
@@ -101,6 +101,8 @@
             <input asp-for="Repository.IssueRegex" value="@Model.Repository.IssueRegex" />
         </div>
 
-        <button type="submit">Save</button>
+        <button>Update</button>
+        <button asp-page-handler="SlackTest">Slack Check</button>
+        <button asp-page-handler="GithubTest">Github Check</button>
     </form>
 </div>

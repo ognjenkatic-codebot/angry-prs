@@ -46,18 +46,18 @@ namespace AngryPullRequests.Application.Slack.Services
             await api.Chat.PostMessage(new Message { Blocks = blocks, Channel = repository.Characteristics.SlackNotificationChannel });
         }
 
-        public async Task SendTestMessage(Repository repository)
+        public async Task SendTestMessage(string apiToken, string notificationChannel, string messageContent)
         {
-            var api = new SlackServiceBuilder().UseApiToken(repository.Characteristics.SlackApiToken).GetApiClient();
+            var api = new SlackServiceBuilder().UseApiToken(apiToken).GetApiClient();
             var blocks = new List<Block>
             {
                 new HeaderBlock
                 {
-                    Text = new PlainText() { Text = "Sve ok", Emoji = true }
+                    Text = new PlainText() { Text = messageContent, Emoji = true }
                 }
             };
 
-            await api.Chat.PostMessage(new Message { Blocks = blocks, Channel = repository.Characteristics.SlackNotificationChannel });
+            await api.Chat.PostMessage(new Message { Blocks = blocks, Channel = notificationChannel });
         }
     }
 }

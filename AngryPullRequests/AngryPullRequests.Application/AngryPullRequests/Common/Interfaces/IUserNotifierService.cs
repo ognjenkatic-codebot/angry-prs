@@ -12,6 +12,6 @@ namespace AngryPullRequests.Application.AngryPullRequests.Common.Interfaces
     public interface IUserNotifierService
     {
         Task Notify(PullRequestNotificationGroup[] pullRequestNotificationGroups, Repository repository, IPullRequestService pullRequestService);
-        Task SendTestMessage(Repository repository);
+        Task SendTestMessage(string apiToken, string notificationChannel, string messageContent);
     }
 }

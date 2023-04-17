@@ -3,6 +3,8 @@ using AngryPullRequests.Infrastructure;
 using AngryPullRequests.Infrastructure.Persistence;
 using AngryPullRequests.Web;
 using AngryPullRequests.Web.Util.Mappings;
+using AspNetCoreHero.ToastNotification;
+using AspNetCoreHero.ToastNotification.Extensions;
 using Autofac;
 using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
@@ -28,7 +30,12 @@ builder.Services
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateRepositoryCommand).Assembly));
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+builder.Services.AddNotyf(config =>
+{
+    config.DurationInSeconds = 5;
+    config.IsDismissable = true;
+    config.Position = NotyfPosition.TopRight;
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -42,6 +49,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseNotyf();
 
 app.MapRazorPages();
 app.MapDefaultControllerRoute();

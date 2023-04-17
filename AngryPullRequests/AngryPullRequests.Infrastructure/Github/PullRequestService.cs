@@ -70,28 +70,19 @@ namespace AngryPullRequests.Infrastructure.Github
             int startPage
         )
         {
-            try
-            {
-                var pullRequests = await gitHubClient.PullRequest.GetAllForRepository(
-                    owner,
-                    repository,
-                    new PullRequestRequest { State = getAll ? ItemStateFilter.All : ItemStateFilter.Open, SortProperty = PullRequestSort.Created },
-                    new ApiOptions
-                    {
-                        PageCount = pageCount,
-                        PageSize = pageSize,
-                        StartPage = startPage
-                    }
-                );
+            var pullRequests = await gitHubClient.PullRequest.GetAllForRepository(
+                owner,
+                repository,
+                new PullRequestRequest { State = getAll ? ItemStateFilter.All : ItemStateFilter.Open, SortProperty = PullRequestSort.Created },
+                new ApiOptions
+                {
+                    PageCount = pageCount,
+                    PageSize = pageSize,
+                    StartPage = startPage
+                }
+            );
 
-                return mapper.Map<Domain.Models.PullRequest[]>(pullRequests.ToArray());
-            }
-            catch (Exception exc)
-            {
-                Console.WriteLine(exc.Message);
-            }
-
-            return null;
+            return mapper.Map<Domain.Models.PullRequest[]>(pullRequests.ToArray());
         }
 
         public async Task<Domain.Models.PullRequestReview[]> GetPullRequsetReviews(string owner, string repository, int pullRequestNumber)
