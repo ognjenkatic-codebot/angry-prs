@@ -19,7 +19,10 @@ namespace AngryPullRequests.Application.Slack.Formatters
                 .Select(group => new { Login = group.Key, Count = group.Count() })
                 .OrderByDescending(pu => pu.Count);
 
-            var userBlocks = new List<Block> { new HeaderBlock { Text = CreatePe($"Opterecenje po developeru :face_with_peeking_eye:") } };
+            var userBlocks = new List<Block>
+            {
+                new HeaderBlock { Text = CreatePe($"{repository.Name} - Opterecenje po developeru :face_with_peeking_eye:") }
+            };
 
             foreach (var user in prsByUser)
             {

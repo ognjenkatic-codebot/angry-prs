@@ -31,7 +31,7 @@ namespace AngryPullRequests.Application.AngryPullRequests
             }
         }
 
-        private async Task<List<PullRequestNotificationGroup>> GetNotificationGroups(
+        private static async Task<List<PullRequestNotificationGroup>> GetNotificationGroups(
             string repositoryName,
             string repositoryOwner,
             RepositoryCharacteristics characteristics,

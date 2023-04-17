@@ -20,12 +20,10 @@ namespace AngryPullRequests.Application.Slack.Services
     public class SlackNotifierService : IUserNotifierService
     {
         private readonly IEnumerable<ISlackMessageFormatter> messageFormatters;
-        private readonly IAngryPullRequestsContext dbContext;
 
-        public SlackNotifierService(IEnumerable<ISlackMessageFormatter> messageFormatters, IAngryPullRequestsContext dbContext)
+        public SlackNotifierService(IEnumerable<ISlackMessageFormatter> messageFormatters)
         {
             this.messageFormatters = messageFormatters;
-            this.dbContext = dbContext;
         }
 
         public async Task Notify(

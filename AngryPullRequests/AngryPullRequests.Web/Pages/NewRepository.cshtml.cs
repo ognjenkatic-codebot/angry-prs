@@ -58,9 +58,6 @@ namespace AngryPullRequests.Web.Pages
             [Range(0.01f, int.MaxValue)]
             public float DeleteHeavyRatio { get; set; }
             [Required]
-            [StringLength(maximumLength: 150, MinimumLength = 3)]
-            public required string SlackAccessToken { get; set; }
-            [Required]
             [StringLength(maximumLength: 50, MinimumLength = 3)]
             public required string IssueBaseUrl { get; set; }
             [Required]
@@ -97,7 +94,6 @@ namespace AngryPullRequests.Web.Pages
                 PullRequestNameCaptureRegex = "^(.*)$",
                 PullRequestNameRegex = "^.*$",
                 ReleaseTagRegex = "Q[0-9]+\\.[0-9]+\\.[0-9]+",
-                SlackAccessToken = "",
                 SlackApiToken = "",
                 SlackNotificationChannel = "",
                 SmallPrChangeCount = 100,

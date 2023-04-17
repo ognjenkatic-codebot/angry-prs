@@ -137,7 +137,7 @@ namespace AngryPullRequests.Application.Slack.Formatters
         {
             var users = string.Join(',', pullRequestNotificationGroups.Select(p => p.PullRequest.User.Login).ToList());
 
-            var blocks = new List<Block> { new HeaderBlock { Text = CreatePe($"Pregled Pull Requestova") } };
+            var blocks = new List<Block> { new HeaderBlock { Text = CreatePe($"{repository.Name} - Pregled Pull Requestova") } };
 
             var tasks = pullRequestNotificationGroups.Select(ng => GetPullRequestsMessageBlocks(ng.Reviewers, ng.PullRequest, repository));
 

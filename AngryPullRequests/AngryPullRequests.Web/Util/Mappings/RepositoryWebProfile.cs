@@ -30,7 +30,6 @@ namespace AngryPullRequests.Web.Util.Mappings
                                     PullRequestNameCaptureRegex = src.PullRequestNameCaptureRegex,
                                     PullRequestNameRegex = src.PullRequestNameRegex,
                                     ReleaseTagRegex = src.ReleaseTagRegex,
-                                    SlackAccessToken = src.SlackAccessToken,
                                     SlackApiToken = src.SlackApiToken,
                                     SlackNotificationChannel = src.SlackNotificationChannel,
                                     SmallPrChangeCount = src.SmallPrChangeCount
@@ -46,7 +45,6 @@ namespace AngryPullRequests.Web.Util.Mappings
                 .ForMember(dst => dst.TimeOfDay, opt => opt.MapFrom(src => src.RunSchedule.TimeOfDay))
                 .ForMember(dst => dst.IssueRegex, opt => opt.MapFrom(src => src.Characteristics.IssueRegex))
                 .ForMember(dst => dst.PullRequestNameCaptureRegex, opt => opt.MapFrom(src => src.Characteristics.PullRequestNameCaptureRegex))
-                .ForMember(dst => dst.SlackAccessToken, opt => opt.MapFrom(src => src.Characteristics.SlackAccessToken))
                 .ForMember(dst => dst.SlackNotificationChannel, opt => opt.MapFrom(src => src.Characteristics.SlackNotificationChannel))
                 .ForMember(dst => dst.DeleteHeavyRatio, opt => opt.MapFrom(src => src.Characteristics.DeleteHeavyRatio))
                 .ForMember(dst => dst.PullRequestNameRegex, opt => opt.MapFrom(src => src.Characteristics.PullRequestNameRegex))
@@ -63,7 +61,6 @@ namespace AngryPullRequests.Web.Util.Mappings
                 .ForMember(dst => dst.TimeOfDay, opt => opt.MapFrom(src => src.RunSchedule.TimeOfDay))
                 .ForMember(dst => dst.IssueRegex, opt => opt.MapFrom(src => src.Characteristics.IssueRegex))
                 .ForMember(dst => dst.PullRequestNameCaptureRegex, opt => opt.MapFrom(src => src.Characteristics.PullRequestNameCaptureRegex))
-                .ForMember(dst => dst.SlackAccessToken, opt => opt.MapFrom(src => src.Characteristics.SlackAccessToken))
                 .ForMember(dst => dst.SlackNotificationChannel, opt => opt.MapFrom(src => src.Characteristics.SlackNotificationChannel))
                 .ForMember(dst => dst.DeleteHeavyRatio, opt => opt.MapFrom(src => src.Characteristics.DeleteHeavyRatio))
                 .ForMember(dst => dst.PullRequestNameRegex, opt => opt.MapFrom(src => src.Characteristics.PullRequestNameRegex))

@@ -33,7 +33,6 @@ namespace AngryPullRequests.Application.AngryPullRequests.Common.Mappings
                                     PullRequestNameCaptureRegex = src.PullRequestNameCaptureRegex,
                                     PullRequestNameRegex = src.PullRequestNameRegex,
                                     ReleaseTagRegex = src.ReleaseTagRegex,
-                                    SlackAccessToken = src.SlackAccessToken,
                                     SlackApiToken = src.SlackApiToken,
                                     SlackNotificationChannel = src.SlackNotificationChannel,
                                     SmallPrChangeCount = src.SmallPrChangeCount
@@ -63,7 +62,6 @@ namespace AngryPullRequests.Application.AngryPullRequests.Common.Mappings
                                     PullRequestNameCaptureRegex = src.PullRequestNameCaptureRegex,
                                     PullRequestNameRegex = src.PullRequestNameRegex,
                                     ReleaseTagRegex = src.ReleaseTagRegex,
-                                    SlackAccessToken = src.SlackAccessToken,
                                     SlackApiToken = src.SlackApiToken,
                                     SlackNotificationChannel = src.SlackNotificationChannel,
                                     SmallPrChangeCount = src.SmallPrChangeCount

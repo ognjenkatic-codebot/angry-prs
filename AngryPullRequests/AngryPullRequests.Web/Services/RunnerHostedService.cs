@@ -1,6 +1,7 @@
 ﻿using AngryPullRequests.Application.AngryPullRequests.Common.Interfaces;
 using AngryPullRequests.Application.Github;
 using AngryPullRequests.Application.Persistence;
+using Autofac;
 using Microsoft.EntityFrameworkCore;
 
 namespace AngryPullRequests.Web.Services
@@ -8,19 +9,11 @@ namespace AngryPullRequests.Web.Services
     public class RunnerHostedService : IHostedService
     {
         private readonly CancellationTokenSource _tokenSource = new();
-        private readonly Func<IAngryPullRequestsService> angryPullRequestServiceFactory;
-        private readonly IAngryPullRequestsContext dbContext;
-        private readonly IPullRequestServiceFactory pullRequestServiceFactory;
+        private readonly ILifetimeScope lifetimeScope;
 
-        public RunnerHostedService(
-            Func<IAngryPullRequestsService> angryPullRequestServiceFactory,
-            IAngryPullRequestsContext dbContext,
-            IPullRequestServiceFactory pullRequestServiceFactory
-        )
+        public RunnerHostedService(ILifetimeScope lifetimeScope)
         {
-            this.angryPullRequestServiceFactory = angryPullRequestServiceFactory;
-            this.dbContext = dbContext;
-            this.pullRequestServiceFactory = pullRequestServiceFactory;
+            this.lifetimeScope = lifetimeScope;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -31,7 +24,7 @@ namespace AngryPullRequests.Web.Services
 
                 // Calculate delay untill next minute, assuming tasks don't run for more than one minute
                 var now = DateTimeOffset.UtcNow;
-                var nowPlus = new DateTimeOffset(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, TimeSpan.Zero).AddMinutes(1);
+                var nowPlus = new DateTimeOffset(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, TimeSpan.Zero).AddMinutes(1).AddSeconds(5);
 
                 await Task.Delay(nowPlus - now, cancellationToken);
             }
@@ -45,6 +38,12 @@ namespace AngryPullRequests.Web.Services
 
         private async Task Run()
         {
+            using var scope = lifetimeScope.BeginLifetimeScope();
+
+            var dbContext = scope.Resolve<IAngryPullRequestsContext>();
+            var pullRequestServiceFactory = scope.Resolve<IPullRequestServiceFactory>();
+            var angryPullRequestServiceFactory = scope.Resolve<Func<IAngryPullRequestsService>>();
+
             var now = DateTimeOffset.UtcNow;
             var repos = await dbContext.RunSchedules
                 .Include(r => r.Repository)

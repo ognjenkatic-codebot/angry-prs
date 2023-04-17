@@ -24,7 +24,7 @@
                 <div class="mb-3">
                     <label asp-for="Repository.TimeOfDay" class="form-label">Time of Day</label>
                     <p class="form-text my-label-descriptor">UTC time at which the repository report will be generated and delivered.</p>
-                    <input asp-for="Repository.TimeOfDay" type="time" value="@Model.Repository.TimeOfDay" class="form-control" />
+                    <input asp-for="Repository.TimeOfDay" type="time" value="@Model.Repository!.TimeOfDay" class="form-control" />
                     <span asp-validation-for="Repository.TimeOfDay" class="text-danger"></span>
                 </div>
             </div>
@@ -56,6 +56,9 @@
                     <input asp-for="Repository.InProgressLabel" value="@Model.Repository.InProgressLabel" class="form-control" />
                     <span asp-validation-for="Repository.InProgressLabel" class="text-danger"></span>
                 </div>
+              
+            </div>
+            <div class="col-md-6">
                 <div class="mb-3">
                     <label asp-for="Repository.SmallPrChangeCount" class="form-label">Small Pr Change Count</label>
                     <p class="form-text my-label-descriptor">If the pull request has this many or less changes, it will be marked as small</p>
@@ -74,8 +77,6 @@
                     <input asp-for="Repository.OldPrAgeInDays" value="@Model.Repository.OldPrAgeInDays" class="form-control" />
                     <span asp-validation-for="Repository.OldPrAgeInDays" class="text-danger"></span>
                 </div>
-            </div>
-            <div class="col-md-6">
                 <div class="mb-3">
                     <label asp-for="Repository.InactivePrAgeInDays" class="form-label">Inactive Pr Age In Days</label>
                     <p class="form-text my-label-descriptor">If the pull request has had no activity for this many days or less, it will be marked as inactive.</p>
@@ -88,6 +89,11 @@
                     <input asp-for="Repository.DeleteHeavyRatio" value="@Model.Repository.DeleteHeavyRatio" class="form-control" />
                     <span asp-validation-for="Repository.DeleteHeavyRatio" class="text-danger"></span>
                 </div>
+            </div>
+        </div>
+        <div class="row">
+            <h4 class="mb-3">Notifications and ticketing</h4>
+            <div class="col-md-6">
                 <div class="mb-3">
                     <label asp-for="Repository.SlackNotificationChannel" class="form-label">Slack Notification Channel</label>
                     <p class="form-text my-label-descriptor">Name of the slack channel which will receive notifications. The slack bot must be added to this channel first.</p>
@@ -95,17 +101,13 @@
                     <span asp-validation-for="Repository.SlackNotificationChannel" class="text-danger"></span>
                 </div>
                 <div class="mb-3">
-                    <label asp-for="Repository.SlackAccessToken" class="form-label">Slack Access Token</label>
-                    <p class="form-text my-label-descriptor">Access token for the slack bot.</p>
-                    <input asp-for="Repository.SlackAccessToken" value="@Model.Repository.SlackAccessToken" class="form-control" />
-                    <span asp-validation-for="Repository.SlackAccessToken" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
                     <label asp-for="Repository.SlackApiToken" class="form-label">Slack Api Token</label>
                     <p class="form-text my-label-descriptor">Api token for the slack bot.</p>
                     <input asp-for="Repository.SlackApiToken" value="@Model.Repository.SlackApiToken" class="form-control" />
                     <span asp-validation-for="Repository.SlackApiToken" class="text-danger"></span>
                 </div>
+            </div>
+            <div class="col-md-6">
                 <div class="mb-3">
                     <label asp-for="Repository.IssueBaseUrl" class="form-label">Issue Base Url</label>
                     <p class="form-text my-label-descriptor">Base url for the ticketing system used to track pull requests. If the pull request names contain ticket names, these two will be concatenated to create links to the tickets.</p>
