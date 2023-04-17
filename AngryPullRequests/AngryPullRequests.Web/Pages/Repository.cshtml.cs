@@ -77,7 +77,7 @@ namespace AngryPullRequests.Web.Pages
         private readonly IMapper mapper;
         private readonly INotyfService toastNotification;
 
-        public Model Repository { get; set; }
+        public Model? Repository { get; set; }
 
         public RepositoryModel(IMediator mediator, IMapper mapper, INotyfService toastNotification)
         {
@@ -99,36 +99,70 @@ namespace AngryPullRequests.Web.Pages
 
             var updatedRepo = await mediator.Send(updateCommand);
 
-            toastNotification.Success("A success for christian-schou.dk");
+            toastNotification.Success("Repository has been saved");
 
             return RedirectToPage($"/Repository", updatedRepo.Id);
         }
 
         public async Task<IActionResult> OnPostGithubTestAsync()
         {
+            if (Repository is null)
+            {
+                toastNotification.Error($"Unknown error", 5);
+                return Page();
+            }
+
             try
             {
                 await mediator.Send(new FetchTestGithubCommand { RepositoryName = Repository.Name, RepositoryOwner = Repository.Owner });
 
-                toastNotification.Success("Test Github request je uspjesno izvrsen");
+                toastNotification.Success("Test Github request sucesfully completed");
             }
             catch (AuthorizationException)
             {
                 toastNotification.Error(
-                    "Autorizacija neuspjesna, Github token vjerovatno nije vazeci ili nema odgovarajuce permisije za ovaj repository",
+                    "Authorization failed, Github token is invalid or does not have the required permissions",
                     5
                 );
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                toastNotification.Error($"Nepoznata greska prilikom test github zahtjeva '{ex.Message}', kontaktirajte administratora", 5);
+                toastNotification.Error($"Unknown error while registering, contact administrator", 5);
             }
 
             return RedirectToPage($"/Repository", Repository.Id);
         }
 
+        public async Task<IActionResult> OnPostDeleteAsync()
+        {
+            if (Repository is null)
+            {
+                toastNotification.Error($"Unknown error", 5);
+                return Page();
+            }
+
+            try
+            {
+                await mediator.Send(new DeleteRepositoryCommand { Id = Repository.Id });
+                toastNotification.Success("Repostory has been unregistered");
+            }
+            catch (Exception)
+            {
+                toastNotification.Error($"Unknown error while unregistering repository, contact administrator", 5);
+            }
+
+            return RedirectToPage("/MyRepositories");
+        }
+
+
         public async Task<IActionResult> OnPostSlackTestAsync()
         {
+            if (Repository is null)
+            {
+                toastNotification.Error($"Unknown error", 5);
+                return Page();
+            }
+
             try
             {
                 await mediator.Send(
@@ -139,26 +173,26 @@ namespace AngryPullRequests.Web.Pages
                     }
                 );
 
-                toastNotification.Success("Test slack poruka je uspjesno poslana");
+                toastNotification.Success("Test slack message sucessfully sent");
             }
             catch (SlackException ex)
             {
                 if (ex.ErrorCode == "invalid_auth")
                 {
-                    toastNotification.Error("Autorizacija neuspjesna, slanje test slack poruke nije uspjelo", 5);
+                    toastNotification.Error("Authorization failed, could not send slack message", 5);
                 }
                 else if (ex.ErrorCode == "channel_not_found")
                 {
-                    toastNotification.Error("Kanal ne postoji, slanje test slack poruke nije uspjelo", 5);
+                    toastNotification.Error("Channel not found, could not send slack message", 5);
                 }
                 else
                 {
-                    toastNotification.Error($"Genericka slack greska '{ex.ErrorCode}', slanje test slack poruke nije uspjelo", 5);
+                    toastNotification.Error($"Generic slack error, could not send slack message", 5);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                toastNotification.Error($"Nepoznata greska prilikom test slack zahtjeva '{ex.Message}', kontaktirajte administratora", 5);
+                toastNotification.Error($"Unknown error while, contact administrator", 5);
             }
 
             return RedirectToPage($"/Repository", Repository.Id);

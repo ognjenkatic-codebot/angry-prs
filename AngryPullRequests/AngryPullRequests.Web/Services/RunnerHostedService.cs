@@ -31,7 +31,7 @@ namespace AngryPullRequests.Web.Services
 
                 // Calculate delay untill next minute, assuming tasks don't run for more than one minute
                 var now = DateTimeOffset.UtcNow;
-                var nowPlus = new DateTimeOffset(now.Year, now.Month, now.Day, now.Hour, now.Minute + 1, 5, TimeSpan.Zero);
+                var nowPlus = new DateTimeOffset(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, TimeSpan.Zero).AddMinutes(1);
 
                 await Task.Delay(nowPlus - now, cancellationToken);
             }

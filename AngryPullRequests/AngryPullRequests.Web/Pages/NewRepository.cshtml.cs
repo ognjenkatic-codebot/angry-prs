@@ -145,35 +145,35 @@ namespace AngryPullRequests.Web.Pages
             {
                 if (ex.ErrorCode == "invalid_auth")
                 {
-                    toastNotification.Error("Autorizacija neuspjesna, slanje test slack poruke nije uspjelo", 5);
+                    toastNotification.Error("Authorization failed, could not send slack message", 5);
                 }
                 else if (ex.ErrorCode == "channel_not_found")
                 {
-                    toastNotification.Error("Kanal ne postoji, slanje test slack poruke nije uspjelo", 5);
+                    toastNotification.Error("Channel not found, could not send slack message", 5);
                 }
                 else
                 {
-                    toastNotification.Error($"Genericka slack greska, slanje test slack poruke nije uspjelo", 5);
+                    toastNotification.Error($"Generic slack error, could not send slack message", 5);
                 }
             }
             catch (AuthorizationException)
             {
                 toastNotification.Error(
-                    "Autorizacija neuspjesna, Github token vjerovatno nije vazeci ili nema odgovarajuce permisije za ovaj repository",
+                    "Authorization failed, Github token is invalid or does not have the required permissions",
                     5
                 );
             }
             catch (RepositoryExists)
             {
-                toastNotification.Error("Repository sa istim imenom i vlasnikom je vec registrovana, nije moguce kreirati duplikat", 5);
+                toastNotification.Error("Repository with the same name is already registered by some user, cannot create duplicates", 5);
             }
             catch (NotFoundException)
             {
-                toastNotification.Error($"Repository naziva {Repository.Name} vlasnika {Repository.Owner} nije pronadjen", 5);
+                toastNotification.Error($"Repository {Repository.Name} owned by {Repository.Owner} not found on GitHub", 5);
             }
             catch (Exception)
             {
-                toastNotification.Error($"Nepoznata greska prilikom zahtjeva, kontaktirajte administratora", 5);
+                toastNotification.Error($"Unknown error while registering, contact administrator", 5);
             }
 
             return Page();

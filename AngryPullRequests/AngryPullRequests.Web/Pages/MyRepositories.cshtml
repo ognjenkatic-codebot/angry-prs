@@ -16,7 +16,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var repository in Model.Repositories)
+            @foreach (var repository in Model.Repositories!)
             {
                 <tr>
                     <td><a href="/Repository/@repository.Id">@repository.Name</a></td>
@@ -25,7 +25,7 @@
                     <td>@repository.RunSchedule.TimeOfDay</td>
                     <td>@repository.Characteristics.SlackNotificationChannel</td>
                     <td>
-                        <a href="/NewRepository?clone=@repository.Id" title="abcd" style="padding: 4px;" class="btn btn-primary">
+                        <a href="/NewRepository?clone=@repository.Id" style="padding: 4px;" class="btn btn-primary">
                             Clone
                             <i class="fa-solid fa-clone"></i>
                         </a>

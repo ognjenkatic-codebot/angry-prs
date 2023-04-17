@@ -37,16 +37,14 @@ namespace AngryPullRequests.Application.AngryPullRequests.Commands
             private readonly IAngryPullRequestsContext _dbContext;
             private readonly IMapper mapper;
             private readonly IUserService userService;
-            private readonly IUserNotifierService userNotifierService;
             private readonly IPullRequestServiceFactory pullRequestServiceFactory;
             private readonly IMediator mediator;
 
-            public Handler(IAngryPullRequestsContext dbContext, IMapper mapper, IUserService userService, IUserNotifierService userNotifierService, IPullRequestServiceFactory pullRequestServiceFactory, IMediator mediator)
+            public Handler(IAngryPullRequestsContext dbContext, IMapper mapper, IUserService userService, IPullRequestServiceFactory pullRequestServiceFactory, IMediator mediator)
             {
                 _dbContext = dbContext;
                 this.mapper = mapper;
                 this.userService = userService;
-                this.userNotifierService = userNotifierService;
                 this.pullRequestServiceFactory = pullRequestServiceFactory;
                 this.mediator = mediator;
             }
@@ -61,7 +59,7 @@ namespace AngryPullRequests.Application.AngryPullRequests.Commands
 
                 // TODO: Move validation to fluent
 
-                var conflictingRepoExists = await _dbContext.Repositories.FirstOrDefaultAsync(r => r.Name == request.Name && r.Owner == request.Owner);
+                var conflictingRepoExists = await _dbContext.Repositories.FirstOrDefaultAsync(r => r.Name == request.Name && r.Owner == request.Owner, cancellationToken: cancellationToken);
 
                 if (conflictingRepoExists is not null)
                 {

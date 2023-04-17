@@ -15,7 +15,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var repository in Model.Repositories)
+            @foreach (var repository in Model.Repositories!)
             {
                 <tr>
                     <td>@repository.Name</td>

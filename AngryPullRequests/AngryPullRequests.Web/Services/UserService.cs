@@ -20,8 +20,9 @@ namespace AngryPullRequests.Web.Services
 
         public async Task<AngryUser> GetCurrentUser()
         {
-            var ur = httpContextAccessor.HttpContext.User.Identity as ClaimsIdentity;
-            var username = ur.Claims.First(c => c.Type == "Username").Value;
+            var ur = httpContextAccessor.HttpContext!.User.Identity as ClaimsIdentity;
+
+            var username = ur!.Claims.First(c => c.Type == "Username").Value;
 
             return await dbContext.Users.Include(u => u.Repositories).FirstAsync(u => u.UserName == username);
         }

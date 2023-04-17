@@ -1,3 +1,4 @@
+using AngryPullRequests.Application.AngryPullRequests.Common.Interfaces;
 using AngryPullRequests.Application.Persistence;
 using AngryPullRequests.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -13,6 +14,7 @@ namespace AngryPullRequests.Web.Pages
     public class MeModel : PageModel
     {
         private readonly IAngryPullRequestsContext dbContext;
+        private readonly IUserService userService;
 
         public required string GithubLogin { get; set; }
         [BindProperty]
@@ -24,17 +26,15 @@ namespace AngryPullRequests.Web.Pages
         public string? AvatarUrl { get; set; }
 
 
-        public MeModel(IAngryPullRequestsContext dbContext)
+        public MeModel(IAngryPullRequestsContext dbContext, IUserService userService)
         {
             this.dbContext = dbContext;
+            this.userService = userService;
         }
 
         public async Task OnGet() {
 
-            var ur = HttpContext.User.Identity as ClaimsIdentity;
-            var username = ur.Claims.First(c => c.Type == "Username").Value;
-
-            var user = await dbContext.Users.FirstAsync(u => u.UserName == username);
+            var user = await userService.GetCurrentUser();
 
             GithubLogin = user.UserName;
             AvatarUrl = user.GithubAvatarUrl;
@@ -45,18 +45,14 @@ namespace AngryPullRequests.Web.Pages
 
         public async Task<IActionResult>  OnPostAsync()
         {
-            var ur = HttpContext.User.Identity as ClaimsIdentity;
-            var username = ur.Claims.First(c => c.Type == "Username").Value;
-
-            var user = await dbContext.Users.FirstAsync(u => u.UserName == username);
+            var user = await userService.GetCurrentUser();
 
             user.Note = Note;
             user.Name = Name;
 
-
             await dbContext.SaveChangesAsync(new CancellationTokenSource().Token);
 
-            return RedirectToPage("/me");
+            return RedirectToPage("/Me");
         }
     }
 }

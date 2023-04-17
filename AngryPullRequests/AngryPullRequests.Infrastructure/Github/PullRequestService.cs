@@ -19,12 +19,10 @@ namespace AngryPullRequests.Infrastructure.Github
     public class PullRequestServiceFactory : IPullRequestServiceFactory
     {
         private readonly ILifetimeScope lifetimeScope;
-        private readonly IAngryPullRequestsContext dbContext;
 
-        public PullRequestServiceFactory(ILifetimeScope lifetimeScope, IAngryPullRequestsContext dbContext)
+        public PullRequestServiceFactory(ILifetimeScope lifetimeScope)
         {
             this.lifetimeScope = lifetimeScope;
-            this.dbContext = dbContext;
         }
 
         public async Task<IPullRequestService> Create(Domain.Entities.Repository repository)
@@ -36,7 +34,7 @@ namespace AngryPullRequests.Infrastructure.Github
                 Credentials = new Credentials(repository.AngryUser.UserName, repository.AngryUser.GithubPat)
             };
 
-            return new PullRequestService(mapper, gitHubClient);
+            return await Task.FromResult(new PullRequestService(mapper, gitHubClient));
         }
 
         public async Task<IPullRequestService> Create(string pat)
@@ -45,7 +43,7 @@ namespace AngryPullRequests.Infrastructure.Github
 
             var gitHubClient = new GitHubClient(new ProductHeaderValue("AngryPullRequests")) { Credentials = new Credentials(pat) };
 
-            return new PullRequestService(mapper, gitHubClient);
+            return await Task.FromResult(new PullRequestService(mapper, gitHubClient));
         }
     }
 

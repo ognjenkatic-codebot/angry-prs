@@ -49,7 +49,7 @@ namespace AngryPullRequests.Application.AngryPullRequests
             return response.Where(r => r != null).ToList();
         }
 
-        private async Task<PullRequestNotificationGroup> GetNotificationGroup(
+        private static async Task<PullRequestNotificationGroup> GetNotificationGroup(
             PullRequest pullRequest,
             string repositoryName,
             string repositoryOwner,

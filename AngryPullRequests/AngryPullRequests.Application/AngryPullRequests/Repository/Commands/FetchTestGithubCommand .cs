@@ -32,7 +32,7 @@ namespace AngryPullRequests.Application.AngryPullRequests.Commands
 
                 var pullRequestService = await pullRequestServiceFactory.Create(currentUser.GithubPat);
 
-                var prs = await pullRequestService.GetPullRequests(request.RepositoryOwner, request.RepositoryName, false, 1, 1, 1);
+                await pullRequestService.GetPullRequests(request.RepositoryOwner, request.RepositoryName, false, 1, 1, 1);
             }
         }
     }

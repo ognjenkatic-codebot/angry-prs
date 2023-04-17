@@ -14,12 +14,7 @@ namespace AngryPullRequests.Application.Slack.Formatters
 {
     public class ForgottenPullRequestsMessageFormatter : BaseSlackMessageFormatter
     {
-        private readonly IAngryPullRequestsContext dbContext;
-
-        public ForgottenPullRequestsMessageFormatter(IAngryPullRequestsContext dbContext)
-        {
-            this.dbContext = dbContext;
-        }
+        public ForgottenPullRequestsMessageFormatter() { }
 
         private async Task<List<Block>> GetPullRequestsMessageBlocks(User[] reviewers, PullRequest pullRequest, Repository repository)
         {
@@ -135,7 +130,7 @@ namespace AngryPullRequests.Application.Slack.Formatters
 
             blocks.Add(new DividerBlock());
 
-            return blocks;
+            return await Task.FromResult(blocks);
         }
 
         public override async Task<List<Block>> GetBlocks(PullRequestNotificationGroup[] pullRequestNotificationGroups, Repository repository)

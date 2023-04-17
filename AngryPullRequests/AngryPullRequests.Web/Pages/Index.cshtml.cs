@@ -6,12 +6,12 @@ namespace AngryPullRequests.Web.Pages
 {
     public class RepositoryRow
     {
-        public string Name { get; set; }
-        public string Owner { get; set; }
-        public string AngryUser { get; set; }
-        public TimeOnly TimeOfDay { get; set; }
-        public string UserAvatar { get; set; }
-        public string UserGithubProfile { get; set; }
+        public required string Name { get; set; }
+        public required string Owner { get; set; }
+        public required string AngryUser { get; set; }
+        public required TimeOnly TimeOfDay { get; set; }
+        public required string UserAvatar { get; set; }
+        public required string UserGithubProfile { get; set; }
     }
 
     public class IndexModel : PageModel

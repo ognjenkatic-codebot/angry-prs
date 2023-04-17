@@ -3,7 +3,17 @@
 @{
 }
 
-<form method="post">
-    <input name="pat">
-    <input type="submit">
-</form>
+<div class="container" style="max-width:500px; display: flex; justify-content: center; align-items: center;">
+    <div class="login-container" style="display: flex; flex-direction: column; align-items: center;">
+        <img src="/login-img.jpg" alt="..." height="256">
+        <h5 class="login-title">Enter GitHub personal access token</h5>
+        <form method="post">
+            <div class="mb-3">
+                <input name="pat" type="password" class="form-control" id="pat" required>
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </form>
+    </div>
+</div>

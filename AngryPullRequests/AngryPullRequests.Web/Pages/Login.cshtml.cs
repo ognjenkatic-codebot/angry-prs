@@ -28,7 +28,7 @@ namespace AngryPullRequests.Web.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(string pat, string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string pat, string returnUrl)
         {
             try
             {
