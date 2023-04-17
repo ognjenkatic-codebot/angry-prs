@@ -58,6 +58,23 @@ namespace AngryPullRequests.Web.Util.Mappings
                 .ForMember(dst => dst.ReleaseTagRegex, opt => opt.MapFrom(src => src.Characteristics.ReleaseTagRegex))
                 .ForMember(dst => dst.SlackApiToken, opt => opt.MapFrom(src => src.Characteristics.SlackApiToken))
                 .ForMember(dst => dst.SmallPrChangeCount, opt => opt.MapFrom(src => src.Characteristics.SmallPrChangeCount));
+
+            CreateMap<Repository, NewRepositoryModel.Model>()
+                .ForMember(dst => dst.TimeOfDay, opt => opt.MapFrom(src => src.RunSchedule.TimeOfDay))
+                .ForMember(dst => dst.IssueRegex, opt => opt.MapFrom(src => src.Characteristics.IssueRegex))
+                .ForMember(dst => dst.PullRequestNameCaptureRegex, opt => opt.MapFrom(src => src.Characteristics.PullRequestNameCaptureRegex))
+                .ForMember(dst => dst.SlackAccessToken, opt => opt.MapFrom(src => src.Characteristics.SlackAccessToken))
+                .ForMember(dst => dst.SlackNotificationChannel, opt => opt.MapFrom(src => src.Characteristics.SlackNotificationChannel))
+                .ForMember(dst => dst.DeleteHeavyRatio, opt => opt.MapFrom(src => src.Characteristics.DeleteHeavyRatio))
+                .ForMember(dst => dst.PullRequestNameRegex, opt => opt.MapFrom(src => src.Characteristics.PullRequestNameRegex))
+                .ForMember(dst => dst.InactivePrAgeInDays, opt => opt.MapFrom(src => src.Characteristics.InactivePrAgeInDays))
+                .ForMember(dst => dst.InProgressLabel, opt => opt.MapFrom(src => src.Characteristics.InProgressLabel))
+                .ForMember(dst => dst.IssueBaseUrl, opt => opt.MapFrom(src => src.Characteristics.IssueBaseUrl))
+                .ForMember(dst => dst.LargePrChangeCount, opt => opt.MapFrom(src => src.Characteristics.LargePrChangeCount))
+                .ForMember(dst => dst.OldPrAgeInDays, opt => opt.MapFrom(src => src.Characteristics.OldPrAgeInDays))
+                .ForMember(dst => dst.ReleaseTagRegex, opt => opt.MapFrom(src => src.Characteristics.ReleaseTagRegex))
+                .ForMember(dst => dst.SlackApiToken, opt => opt.MapFrom(src => src.Characteristics.SlackApiToken))
+                .ForMember(dst => dst.SmallPrChangeCount, opt => opt.MapFrom(src => src.Characteristics.SmallPrChangeCount));
         }
     }
 }

@@ -1,5 +1,6 @@
 using AngryPullRequests.Application.AngryPullRequests.Commands;
 using AngryPullRequests.Application.AngryPullRequests.Common.Exceptions;
+using AngryPullRequests.Application.AngryPullRequests.Queries;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using AutoMapper;
 using MediatR;
@@ -57,13 +58,13 @@ namespace AngryPullRequests.Web.Pages
             [Range(0.01f, int.MaxValue)]
             public float DeleteHeavyRatio { get; set; }
             [Required]
-            [StringLength(maximumLength: 50, MinimumLength = 3)]
+            [StringLength(maximumLength: 150, MinimumLength = 3)]
             public required string SlackAccessToken { get; set; }
             [Required]
             [StringLength(maximumLength: 50, MinimumLength = 3)]
             public required string IssueBaseUrl { get; set; }
             [Required]
-            [StringLength(maximumLength: 50, MinimumLength = 3)]
+            [StringLength(maximumLength: 150, MinimumLength = 3)]
             public required string SlackApiToken { get; set; }
             [Required]
             [StringLength(maximumLength: 50, MinimumLength = 3)]
@@ -104,7 +105,26 @@ namespace AngryPullRequests.Web.Pages
             };
         }
 
-        public void OnGet() { }
+        public async Task OnGet([FromQuery]Guid? clone) 
+        {
+            if (clone is not null)
+            {
+                try
+                {
+                    var repository = await mediator.Send(new GetRepositoryQuery { Id = (Guid)clone });
+
+                    repository.Name = "";
+                    repository.Owner = "";
+
+                
+                    mapper.Map(repository, Repository);
+                }
+                catch (Exception)
+                {
+                    toastNotification.Error("Could not clone target repository", 5);
+                }
+            }
+        }
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -119,7 +139,7 @@ namespace AngryPullRequests.Web.Pages
 
                 var repository = await mediator.Send(createCommand);
 
-                return RedirectToPage($"/Repository/{repository.Id}");
+                return RedirectToPage($"/MyRepositories");
             }
             catch (SlackException ex)
             {

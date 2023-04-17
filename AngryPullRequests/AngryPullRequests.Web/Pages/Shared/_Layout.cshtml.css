@@ -47,8 +47,6 @@ button.accept-policy {
   line-height: 60px;
 }
 
-.my-navbar{
-}
-
-.my-navbar-content {
+.my-container{
+    padding:10px;
 }

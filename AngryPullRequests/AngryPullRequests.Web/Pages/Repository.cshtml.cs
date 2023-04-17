@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Octokit;
 using SlackNet;
+using System.ComponentModel.DataAnnotations;
 
 namespace AngryPullRequests.Web.Pages
 {
@@ -20,24 +21,56 @@ namespace AngryPullRequests.Web.Pages
     {
         public class Model
         {
-            public Guid Id { get; set; }
-            public string Name { get; set; }
-            public string Owner { get; set; }
-            public TimeOnly TimeOfDay { get; set; }
-            public string PullRequestNameRegex { get; set; }
-            public string PullRequestNameCaptureRegex { get; set; }
-            public string ReleaseTagRegex { get; set; }
-            public string InProgressLabel { get; set; }
+            public required Guid Id { get; set; }
+            [Required]
+            [StringLength(maximumLength: 50, MinimumLength = 3)]
+            public required string Name { get; set; }
+            [Required]
+            [StringLength(maximumLength: 50, MinimumLength = 3)]
+            public required string Owner { get; set; }
+            public required TimeOnly TimeOfDay { get; set; }
+            [Required]
+            [StringLength(maximumLength: 50, MinimumLength = 3)]
+            public required string PullRequestNameRegex { get; set; }
+            [Required]
+            [StringLength(maximumLength: 50, MinimumLength = 3)]
+            public required string PullRequestNameCaptureRegex { get; set; }
+            [Required]
+            [StringLength(maximumLength: 50, MinimumLength = 3)]
+            public required string ReleaseTagRegex { get; set; }
+            [Required]
+            [StringLength(maximumLength: 50, MinimumLength = 3)]
+            public required string InProgressLabel { get; set; }
+            [Required]
+            [Range(1, int.MaxValue)]
             public int SmallPrChangeCount { get; set; }
+            [Required]
+            [Range(1, int.MaxValue)]
             public int LargePrChangeCount { get; set; }
+            [Required]
+            [Range(1, int.MaxValue)]
             public int OldPrAgeInDays { get; set; }
+            [Required]
+            [Range(1, int.MaxValue)]
             public int InactivePrAgeInDays { get; set; }
+            [Required]
+            [Range(0.01f, int.MaxValue)]
             public float DeleteHeavyRatio { get; set; }
-            public string SlackAccessToken { get; set; }
-            public string IssueBaseUrl { get; set; }
-            public string SlackApiToken { get; set; }
-            public string IssueRegex { get; set; }
-            public string SlackNotificationChannel { get; set; }
+            [Required]
+            [StringLength(maximumLength: 150, MinimumLength = 3)]
+            public required string SlackAccessToken { get; set; }
+            [Required]
+            [StringLength(maximumLength: 50, MinimumLength = 3)]
+            public required string IssueBaseUrl { get; set; }
+            [Required]
+            [StringLength(maximumLength: 150, MinimumLength = 3)]
+            public required string SlackApiToken { get; set; }
+            [Required]
+            [StringLength(maximumLength: 50, MinimumLength = 3)]
+            public required string IssueRegex { get; set; }
+            [Required]
+            [StringLength(maximumLength: 50, MinimumLength = 3)]
+            public required string SlackNotificationChannel { get; set; }
         }
 
         private readonly IMediator mediator;

@@ -4,7 +4,7 @@
 }
 
 <div class="container">
-    <table class="table">
+    <table class="table" style="vertical-align: middle;">
         <thead>
             <tr>
                 <th>Name</th>
@@ -12,6 +12,7 @@
                 <th>Angry User</th>
                 <th>Time of day</th>
                 <th>Slack channel</th>
+                <th>Options</th>
             </tr>
         </thead>
         <tbody>
@@ -23,6 +24,12 @@
                     <td>@repository.AngryUser.UserName</td>
                     <td>@repository.RunSchedule.TimeOfDay</td>
                     <td>@repository.Characteristics.SlackNotificationChannel</td>
+                    <td>
+                        <a href="/NewRepository?clone=@repository.Id" title="abcd" style="padding: 4px;" class="btn btn-primary">
+                            Clone
+                            <i class="fa-solid fa-clone"></i>
+                        </a>
+                    </td>
                 </tr>
             }
         </tbody>
