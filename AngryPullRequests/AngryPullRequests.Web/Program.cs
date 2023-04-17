@@ -51,7 +51,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseNotyf();
-app.UseStaticFiles();
+
 app.MapRazorPages();
 app.MapDefaultControllerRoute();
 
