@@ -5,7 +5,6 @@ bin
 obj
 dist
 **/appsettings.json
-**/appsettings.Development.json
 *.user
 .env
 *.xmldocs.xml
