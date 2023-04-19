@@ -66,25 +66,6 @@ namespace AngryPullRequests.Infrastructure.Persistence.Migrations
                     b.ToTable("users", (string)null);
                 });
 
-            modelBuilder.Entity("AngryPullRequests.Domain.Entities.Contributor", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id")
-                        .HasDefaultValueSql("gen_random_uuid()");
-
-                    b.Property<string>("GithubUsername")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("github_username");
-
-                    b.HasKey("Id")
-                        .HasName("pk_contributor");
-
-                    b.ToTable("contributor", (string)null);
-                });
-
             modelBuilder.Entity("AngryPullRequests.Domain.Entities.Repository", b =>
                 {
                     b.Property<Guid>("Id")
@@ -186,49 +167,6 @@ namespace AngryPullRequests.Infrastructure.Persistence.Migrations
                     b.ToTable("repository_characteristics", (string)null);
                 });
 
-            modelBuilder.Entity("AngryPullRequests.Domain.Entities.RepositoryContributor", b =>
-                {
-                    b.Property<Guid>("RepositoryId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("repository_id");
-
-                    b.Property<Guid>("ContributorId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("contributor_id");
-
-                    b.Property<DateTimeOffset?>("FirstMergeAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("first_merge_at");
-
-                    b.Property<DateTimeOffset?>("FirstReviewAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("first_review_at");
-
-                    b.Property<DateTimeOffset?>("LastMergeAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("last_merge_at");
-
-                    b.Property<DateTimeOffset?>("LastReviewAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("last_review_at");
-
-                    b.Property<int?>("MergedPullRequestCount")
-                        .HasColumnType("integer")
-                        .HasColumnName("merged_pull_request_count");
-
-                    b.Property<int?>("ReviewedPullRequestCount")
-                        .HasColumnType("integer")
-                        .HasColumnName("reviewed_pull_request_count");
-
-                    b.HasKey("RepositoryId", "ContributorId")
-                        .HasName("pk_repository_contributor");
-
-                    b.HasIndex("ContributorId")
-                        .HasDatabaseName("ix_repository_contributor_contributor_id");
-
-                    b.ToTable("repository_contributor", (string)null);
-                });
-
             modelBuilder.Entity("AngryPullRequests.Domain.Entities.RunSchedule", b =>
                 {
                     b.Property<Guid>("RepositoryId")
@@ -273,27 +211,6 @@ namespace AngryPullRequests.Infrastructure.Persistence.Migrations
                     b.Navigation("Repository");
                 });
 
-            modelBuilder.Entity("AngryPullRequests.Domain.Entities.RepositoryContributor", b =>
-                {
-                    b.HasOne("AngryPullRequests.Domain.Entities.Contributor", "Contributor")
-                        .WithMany("Contributions")
-                        .HasForeignKey("ContributorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_repository_contributor_contributor_contributor_id");
-
-                    b.HasOne("AngryPullRequests.Domain.Entities.Repository", "Repository")
-                        .WithMany("Contributions")
-                        .HasForeignKey("RepositoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_repository_contributor_repositories_repository_id");
-
-                    b.Navigation("Contributor");
-
-                    b.Navigation("Repository");
-                });
-
             modelBuilder.Entity("AngryPullRequests.Domain.Entities.RunSchedule", b =>
                 {
                     b.HasOne("AngryPullRequests.Domain.Entities.Repository", "Repository")
@@ -311,16 +228,9 @@ namespace AngryPullRequests.Infrastructure.Persistence.Migrations
                     b.Navigation("Repositories");
                 });
 
-            modelBuilder.Entity("AngryPullRequests.Domain.Entities.Contributor", b =>
-                {
-                    b.Navigation("Contributions");
-                });
-
             modelBuilder.Entity("AngryPullRequests.Domain.Entities.Repository", b =>
                 {
                     b.Navigation("Characteristics");
-
-                    b.Navigation("Contributions");
 
                     b.Navigation("RunSchedule");
                 });
