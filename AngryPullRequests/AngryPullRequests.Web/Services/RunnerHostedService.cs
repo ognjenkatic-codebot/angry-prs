@@ -1,5 +1,7 @@
 ﻿using AngryPullRequests.Application.AngryPullRequests.Common.Interfaces;
 using AngryPullRequests.Application.AngryPullRequests.Contributors;
+using AngryPullRequests.Application.AngryPullRequests.Contributors.Commands;
+using AngryPullRequests.Application.AngryPullRequests.Contributors.Queries;
 using AngryPullRequests.Application.Github;
 using AngryPullRequests.Application.Persistence;
 using Autofac;
@@ -22,9 +24,7 @@ namespace AngryPullRequests.Web.Services
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            await mediator.Send(new IndexContributionsCommand());
-
-            return;
+            await mediator.Send(new IndexContributionsCommand(), cancellationToken);
             while (!cancellationToken.IsCancellationRequested)
             {
                 await Run();
@@ -32,7 +32,8 @@ namespace AngryPullRequests.Web.Services
                 // Calculate delay untill next minute, assuming tasks don't run for more than one minute
                 var now = DateTimeOffset.UtcNow;
                 var nowPlus = new DateTimeOffset(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, TimeSpan.Zero).AddMinutes(1).AddSeconds(5);
-
+)
+                await mediator.Send(new IndexContributionsCommand(), cancellationToken);
                 await Task.Delay(nowPlus - now, cancellationToken);
             }
         }

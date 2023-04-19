@@ -1,0 +1,55 @@
+﻿@page
+@model AngryPullRequests.Web.Pages.ContributionsModel
+@{
+}
+
+<div class="container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Authorings</th>
+                <th>Last Authoring On</th>
+                <th>First Authoring At</th>
+                <th>Last Authoring At</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var rank = 0;
+                foreach (var contribution in Model.Contributions!)
+                {
+                    var inactive = (@DateTimeOffset.Now - @contribution.LastAuthoringAt) <= @TimeSpan.FromDays(90) ? false : true;
+                    <tr>
+                        <td style="display:flex;">
+
+                            @contribution.Username
+                            @if (rank == 0)
+                            {
+                                <i style="color: gold" class="fa-solid fa-crown fa-bounce inactive-contributor" title="Superstar"></i>
+                            }
+                            @if (rank == 1)
+                            {
+                                <i style="color:silver;" class="fa-solid fa-trophy inactive-contributor"></i>
+                            }
+                            @if (rank ==2)
+                            {
+                                <i style="color:#CD7F32;" class="fa-sharp fa-solid fa-award inactive-contributor"></i>
+                            }
+                            @if (inactive)
+                            {
+                                <i style="color:dimgray;" class="fa-solid fa-user-secret inactive-contributor" title="User is inactive"></i>
+                            }
+
+                        </td>
+                        <td>@contribution.AuthoredPullRequests</td>
+                        <td>@contribution.RecentlyMostActiveOn</td>
+                        <td>@contribution.FirstAuthoringAt.ToString("dd.MM.yyyy")</td>
+                        <td>@contribution.LastAuthoringAt.ToString("dd.MM.yyyy")</td>
+                    </tr>
+                    rank++;
+                }
+            }
+        </tbody>
+    </table>
+</div>

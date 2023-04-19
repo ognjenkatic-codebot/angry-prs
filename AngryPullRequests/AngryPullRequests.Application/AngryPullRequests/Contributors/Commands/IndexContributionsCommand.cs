@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AngryPullRequests.Application.AngryPullRequests.Contributors
+namespace AngryPullRequests.Application.AngryPullRequests.Contributors.Commands
 {
     public class IndexContributionsCommand : IRequest
     {
@@ -79,6 +79,7 @@ namespace AngryPullRequests.Application.AngryPullRequests.Contributors
                                 {
                                     Contributor = contributingUser,
                                     Repository = repositories.First(r => r.Id == repositoryId),
+                                    RepositoryId = repositories.First(r => r.Id == repositoryId).Id,
                                     FirstMergeAt = contibution.Value.FirstAuthoring,
                                     LastMergeAt = contibution.Value.LastAuthoring,
                                     MergedPullRequestCount = contibution.Value.PullRequestsAuthored
