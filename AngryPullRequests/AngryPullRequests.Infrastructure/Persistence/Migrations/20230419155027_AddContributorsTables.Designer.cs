@@ -3,6 +3,7 @@ using System;
 using AngryPullRequests.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AngryPullRequests.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AngryPullRequestsContext))]
-    partial class AngryPullRequestsContextModelSnapshot : ModelSnapshot
+    [Migration("20230419155027_AddContributorsTables")]
+    partial class AddContributorsTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,7 +78,6 @@ namespace AngryPullRequests.Infrastructure.Persistence.Migrations
                         .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<string>("GithubUsername")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("github_username");
 
