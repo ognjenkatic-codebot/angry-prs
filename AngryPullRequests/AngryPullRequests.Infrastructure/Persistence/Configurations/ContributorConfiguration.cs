@@ -13,8 +13,6 @@ namespace AngryPullRequests.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Contributor> builder)
         {
-            builder.HasMany(u => u.Repositories).WithMany(r => r.Contributors).UsingEntity<RepositoryContributor>();
-
             builder.HasKey(u => u.Id);
             builder.Property(u => u.Id).HasDefaultValueSql("gen_random_uuid()");
         }

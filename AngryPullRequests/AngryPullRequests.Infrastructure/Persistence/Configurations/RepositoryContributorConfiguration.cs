@@ -14,6 +14,9 @@ namespace AngryPullRequests.Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<RepositoryContributor> builder)
         {
             builder.HasKey(e => new { e.RepositoryId, e.ContributorId });
+
+            builder.HasOne(rc => rc.Contributor).WithMany(c => c.Contributions).HasForeignKey(c => c.ContributorId);
+            builder.HasOne(rc => rc.Repository).WithMany(r => r.Contributions).HasForeignKey(c => c.Repository);
         }
     }
 }

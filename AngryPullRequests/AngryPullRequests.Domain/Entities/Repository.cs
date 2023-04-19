@@ -13,6 +13,6 @@ namespace AngryPullRequests.Domain.Entities
         public virtual AngryUser AngryUser { get; set; }
         public virtual RunSchedule RunSchedule { get; set; }
         public virtual RepositoryCharacteristics Characteristics { get; set; }
-        public virtual ICollection<Contributor> Contributors { get; set; }
+        public virtual ICollection<RepositoryContributor> Contributions { get; set; }
     }
 }

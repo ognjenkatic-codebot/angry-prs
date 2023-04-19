@@ -10,6 +10,6 @@ namespace AngryPullRequests.Domain.Entities
     {
         public Guid Id { get; set; }
         public string GithubUsername { get; set; }
-        public virtual ICollection<Repository> Repositories { get; set; }
+        public virtual ICollection<RepositoryContributor> Contributions { get; set; }
     }
 }
