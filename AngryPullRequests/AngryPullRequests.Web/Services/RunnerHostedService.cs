@@ -25,6 +25,7 @@ namespace AngryPullRequests.Web.Services
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             await mediator.Send(new IndexContributionsCommand(), cancellationToken);
+            // TODO: move to proper timer later
             while (!cancellationToken.IsCancellationRequested)
             {
                 await Run();
@@ -33,7 +34,11 @@ namespace AngryPullRequests.Web.Services
                 var now = DateTimeOffset.UtcNow;
                 var nowPlus = new DateTimeOffset(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, TimeSpan.Zero).AddMinutes(1).AddSeconds(5);
 )
-                await mediator.Send(new IndexContributionsCommand(), cancellationToken);
+               if (now.Hour == 3 && now.Minute == 0)
+                {
+                    await mediator.Send(new IndexContributionsCommand(), cancellationToken);
+                }
+
                 await Task.Delay(nowPlus - now, cancellationToken);
             }
         }
