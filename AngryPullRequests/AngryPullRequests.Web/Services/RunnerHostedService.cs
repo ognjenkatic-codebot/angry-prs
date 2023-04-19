@@ -1,7 +1,9 @@
 ﻿using AngryPullRequests.Application.AngryPullRequests.Common.Interfaces;
+using AngryPullRequests.Application.AngryPullRequests.Contributors;
 using AngryPullRequests.Application.Github;
 using AngryPullRequests.Application.Persistence;
 using Autofac;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace AngryPullRequests.Web.Services
@@ -10,14 +12,19 @@ namespace AngryPullRequests.Web.Services
     {
         private readonly CancellationTokenSource _tokenSource = new();
         private readonly ILifetimeScope lifetimeScope;
+        private readonly IMediator mediator;
 
-        public RunnerHostedService(ILifetimeScope lifetimeScope)
+        public RunnerHostedService(ILifetimeScope lifetimeScope, IMediator mediator)
         {
             this.lifetimeScope = lifetimeScope;
+            this.mediator = mediator;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
+            await mediator.Send(new IndexContributionsCommand());
+
+            return;
             while (!cancellationToken.IsCancellationRequested)
             {
                 await Run();

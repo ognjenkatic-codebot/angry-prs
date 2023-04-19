@@ -79,15 +79,15 @@ namespace AngryPullRequests.Application.AngryPullRequests
 
             if (pullRequest.Merged)
             {
-                authorExperienceMap[author].PullRequestsMerged++;
+                authorExperienceMap[author].PullRequestsAuthored++;
 
-                if (pullRequest.CreatedAt < authorExperienceMap[author].FirstMerge)
+                if (pullRequest.CreatedAt < authorExperienceMap[author].FirstAuthoring)
                 {
-                    authorExperienceMap[author].FirstMerge = pullRequest.CreatedAt.UtcDateTime;
+                    authorExperienceMap[author].FirstAuthoring = pullRequest.CreatedAt.UtcDateTime;
                 }
-                if (pullRequest.CreatedAt > authorExperienceMap[author].LastMerge)
+                if (pullRequest.CreatedAt > authorExperienceMap[author].LastAuthoring)
                 {
-                    authorExperienceMap[author].LastMerge = pullRequest.CreatedAt.UtcDateTime;
+                    authorExperienceMap[author].LastAuthoring = pullRequest.CreatedAt.UtcDateTime;
                 }
             }
         }

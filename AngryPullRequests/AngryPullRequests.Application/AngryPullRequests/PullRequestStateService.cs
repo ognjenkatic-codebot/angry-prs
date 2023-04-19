@@ -147,10 +147,11 @@ namespace AngryPullRequests.Application.AngryPullRequests
             Dictionary<string, double> filteredExperienceLevels = new Dictionary<string, double>();
             foreach (var developer in userExperience.Keys)
             {
-                double experienceLevel = userExperience[developer].PullRequestsMerged / (double)userExperience[developer].TimeSinceFirstMerge.Days;
+                double experienceLevel =
+                    userExperience[developer].PullRequestsAuthored / (double)userExperience[developer].TimeSinceFirstAuthoring.Days;
                 experienceLevels.Add(developer, experienceLevel);
 
-                if (userExperience[developer].TimeSinceFirstMerge.Days >= 90)
+                if (userExperience[developer].TimeSinceFirstAuthoring.Days >= 90)
                 {
                     filteredExperienceLevels.Add(developer, experienceLevel);
                 }
@@ -166,7 +167,7 @@ namespace AngryPullRequests.Application.AngryPullRequests
             {
                 ExperienceLabel label;
 
-                if (userExperience[developer].TimeSinceFirstMerge.Days < 90)
+                if (userExperience[developer].TimeSinceFirstAuthoring.Days < 90)
                 {
                     label = ExperienceLabel.Newcomer;
                 }
@@ -195,7 +196,7 @@ namespace AngryPullRequests.Application.AngryPullRequests
 
         public bool IsUserActive(UserExperience userExperience)
         {
-            return userExperience.TimeSinceFirstMerge > TimeSpan.FromDays(60) ? true : false;
+            return userExperience.TimeSinceFirstAuthoring > TimeSpan.FromDays(60) ? true : false;
         }
 
         public string GetJiraTicket(PullRequest pullRequest)

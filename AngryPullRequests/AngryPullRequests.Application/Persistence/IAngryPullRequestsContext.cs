@@ -10,7 +10,8 @@ namespace AngryPullRequests.Application.Persistence
         DbSet<AngryUser> Users { get; set; }
         DbSet<Repository> Repositories { get; set; }
         DbSet<RunSchedule> RunSchedules { get; set; }
-
+        DbSet<Contributor> Contributors { get; set; }
+        DbSet<RepositoryContributor> RepositoryContributors { get; set; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

@@ -6,23 +6,23 @@ namespace AngryPullRequests.Domain.Models
 {
     public class UserExperience
     {
-        public TimeSpan TimeSinceFirstMerge
+        public TimeSpan TimeSinceFirstAuthoring
         {
-            get => DateTime.UtcNow - FirstMerge;
+            get => DateTime.UtcNow - FirstAuthoring;
         }
 
-        public TimeSpan TimeSinceLastMerge
+        public TimeSpan TimeSinceLastAuthoring
         {
-            get => DateTime.UtcNow - LastMerge;
+            get => DateTime.UtcNow - LastAuthoring;
         }
 
-        public double MergesPerDay
+        public double AuthoringsPerDay
         {
-            get => PullRequestsMerged / (double)(TimeSinceFirstMerge.TotalDays > 0 ? TimeSinceFirstMerge.Days : 1);
+            get => PullRequestsAuthored / (double)(TimeSinceFirstAuthoring.TotalDays > 0 ? TimeSinceFirstAuthoring.Days : 1);
         }
 
-        public int PullRequestsMerged { get; set; }
-        public DateTime FirstMerge { get; set; } = DateTime.MaxValue.ToUniversalTime();
-        public DateTime LastMerge { get; set; } = DateTime.MinValue.ToUniversalTime();
+        public int PullRequestsAuthored { get; set; }
+        public DateTime FirstAuthoring { get; set; } = DateTime.MaxValue.ToUniversalTime();
+        public DateTime LastAuthoring { get; set; } = DateTime.MinValue.ToUniversalTime();
     }
 }
