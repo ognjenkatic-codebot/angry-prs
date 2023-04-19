@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace AngryPullRequests.Domain.Entities
 {
@@ -11,5 +13,6 @@ namespace AngryPullRequests.Domain.Entities
         public virtual AngryUser AngryUser { get; set; }
         public virtual RunSchedule RunSchedule { get; set; }
         public virtual RepositoryCharacteristics Characteristics { get; set; }
+        public virtual ICollection<Contributor> Contributors { get; set; }
     }
 }
