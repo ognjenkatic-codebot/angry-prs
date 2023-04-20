@@ -19,6 +19,9 @@ namespace AngryPullRequests.Application.AngryPullRequests.Contributors.Queries
         public DateTimeOffset FirstAuthoringAt { get; set; }
         public string MostActiveEverOnRepository { get; set; }
         public string RecentlyMostActiveOn { get; set; }
+        public int CommentedOn { get; set; }
+        public int Approved { get; set; }
+        public int ChangeRequests { get; set; }
     }
 
     public class GetUserContributionsRankedQuery : IRequest<List<UserRankingStats>>
@@ -34,41 +37,25 @@ namespace AngryPullRequests.Application.AngryPullRequests.Contributors.Queries
 
             public async Task<List<UserRankingStats>> Handle(GetUserContributionsRankedQuery request, CancellationToken cancellationToken)
             {
-                var contributions = await dbContext.RepositoryContributors.Include(rc => rc.Contributor).Include(rc => rc.Repository).ToListAsync();
+                var contributors = await dbContext.Contributors.Include(c => c.Contributions).ThenInclude(c => c.Repository).ToListAsync();
 
                 var response = new List<UserRankingStats>();
 
-                foreach (var contribution in contributions)
+                foreach (var contributor in contributors)
                 {
-                    var userContribution = response.FirstOrDefault(uc => uc.Username == contribution.Contributor.GithubUsername);
-
-                    if (userContribution is null)
-                    {
-                        response.Add(
-                            new UserRankingStats
-                            {
-                                AuthoredPullRequests = (int)contribution.MergedPullRequestCount,
-                                FirstAuthoringAt = (DateTimeOffset)contribution.FirstMergeAt,
-                                LastAuthoringAt = (DateTimeOffset)contribution.LastMergeAt,
-                                Username = contribution.Contributor.GithubUsername,
-                                RecentlyMostActiveOn = contribution.Repository.Name
-                            }
-                        );
-                    }
-                    else
-                    {
-                        userContribution.AuthoredPullRequests += (int)contribution.MergedPullRequestCount;
-                        userContribution.FirstAuthoringAt =
-                            (DateTimeOffset)userContribution.FirstAuthoringAt < (DateTimeOffset)contribution.FirstMergeAt
-                                ? (DateTimeOffset)userContribution.FirstAuthoringAt
-                                : (DateTimeOffset)contribution.FirstMergeAt;
-
-                        if (contribution.LastMergeAt > userContribution.LastAuthoringAt)
+                    response.Add(
+                        new UserRankingStats
                         {
-                            userContribution.LastAuthoringAt = (DateTimeOffset)contribution.LastMergeAt;
-                            userContribution.RecentlyMostActiveOn = contribution.Repository.Name;
+                            AuthoredPullRequests = (int)contributor.Contributions.Select(c => c.MergedPullRequestCount).Sum(),
+                            FirstAuthoringAt = (DateTimeOffset)contributor.Contributions.Select(c => c.FirstMergeAt).Min(),
+                            LastAuthoringAt = (DateTimeOffset)contributor.Contributions.Select(C => C.LastMergeAt).Max(),
+                            Username = contributor.GithubUsername,
+                            RecentlyMostActiveOn = contributor.Contributions.OrderBy(c => c.LastMergeAt).First().Repository.Name,
+                            Approved = contributor.Contributions.Select(c => c.ApprovalCount).Sum(),
+                            ChangeRequests = contributor.Contributions.Select(c => c.ChangeRequestCount).Sum(),
+                            CommentedOn = contributor.Contributions.Select(c => c.CommentCount).Sum()
                         }
-                    }
+                    );
                 }
 
                 return response.OrderByDescending(r => r.AuthoredPullRequests).ThenBy(r => r.Username).ToList();

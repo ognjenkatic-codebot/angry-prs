@@ -18,5 +18,8 @@ namespace AngryPullRequests.Domain.Entities
         public DateTimeOffset? LastMergeAt { get; set; }
         public DateTimeOffset? FirstReviewAt { get; set; }
         public DateTimeOffset? LastReviewAt { get; set; }
+        public int CommentCount { get; set; }
+        public int ApprovalCount { get; set; }
+        public int ChangeRequestCount { get; set; }
     }
 }

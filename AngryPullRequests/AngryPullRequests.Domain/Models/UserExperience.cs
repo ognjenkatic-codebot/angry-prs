@@ -24,5 +24,8 @@ namespace AngryPullRequests.Domain.Models
         public int PullRequestsAuthored { get; set; }
         public DateTime FirstAuthoring { get; set; } = DateTime.MaxValue.ToUniversalTime();
         public DateTime LastAuthoring { get; set; } = DateTime.MinValue.ToUniversalTime();
+        public int Comments { get; set; }
+        public int Approvals { get; set; }
+        public int ChangeRequests { get; set; }
     }
 }

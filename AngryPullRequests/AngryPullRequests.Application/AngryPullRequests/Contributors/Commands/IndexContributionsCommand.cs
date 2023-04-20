@@ -61,7 +61,10 @@ namespace AngryPullRequests.Application.AngryPullRequests.Contributors.Commands
                                 Repository = repositories.First(r => r.Id == repositoryId),
                                 FirstMergeAt = contibution.Value.FirstAuthoring,
                                 LastMergeAt = contibution.Value.LastAuthoring,
-                                MergedPullRequestCount = contibution.Value.PullRequestsAuthored
+                                MergedPullRequestCount = contibution.Value.PullRequestsAuthored,
+                                CommentCount = contibution.Value.Comments,
+                                ApprovalCount = contibution.Value.Approvals,
+                                ChangeRequestCount = contibution.Value.ChangeRequests
                             };
 
                             contributors.Add(contribution);
@@ -82,7 +85,10 @@ namespace AngryPullRequests.Application.AngryPullRequests.Contributors.Commands
                                     RepositoryId = repositories.First(r => r.Id == repositoryId).Id,
                                     FirstMergeAt = contibution.Value.FirstAuthoring,
                                     LastMergeAt = contibution.Value.LastAuthoring,
-                                    MergedPullRequestCount = contibution.Value.PullRequestsAuthored
+                                    MergedPullRequestCount = contibution.Value.PullRequestsAuthored,
+                                    CommentCount = contibution.Value.Comments,
+                                    ApprovalCount = contibution.Value.Approvals,
+                                    ChangeRequestCount = contibution.Value.ChangeRequests
                                 };
 
                                 contributors.Add(contribution);
@@ -93,6 +99,9 @@ namespace AngryPullRequests.Application.AngryPullRequests.Contributors.Commands
                                 existingContribution.FirstMergeAt = contibution.Value.FirstAuthoring;
                                 existingContribution.LastMergeAt = contibution.Value.LastAuthoring;
                                 existingContribution.MergedPullRequestCount = contibution.Value.PullRequestsAuthored;
+                                existingContribution.CommentCount = contibution.Value.Comments;
+                                existingContribution.ApprovalCount = contibution.Value.Approvals;
+                                existingContribution.ChangeRequestCount = contibution.Value.ChangeRequests;
                             }
                         }
                     }
@@ -112,10 +121,7 @@ namespace AngryPullRequests.Application.AngryPullRequests.Contributors.Commands
                 bool goNext;
                 do
                 {
-                    var swatch = new Stopwatch();
-                    swatch.Start();
                     var pullRequests = await pullRequestService.GetPullRequests(repository.Owner, repository.Name, true, 1, 100, lastPageFetched);
-                    swatch.Stop();
 
                     totalPrs += pullRequests.Length;
 
@@ -131,33 +137,65 @@ namespace AngryPullRequests.Application.AngryPullRequests.Contributors.Commands
 
                     foreach (var pr in pullRequests)
                     {
-                        ProcessPullRequest(pr, repository.Id, authorExperienceMap);
+                        await ProcessPullRequest(pr, repository, authorExperienceMap, pullRequestService);
                     }
                 } while (goNext);
 
                 return (repository.Id, authorExperienceMap);
             }
 
-            private void ProcessPullRequest(PullRequest pullRequest, Guid repositoryId, Dictionary<string, UserExperience> authorExperienceMap)
+            private static async Task ProcessPullRequest(
+                PullRequest pullRequest,
+                Repository repository,
+                Dictionary<string, UserExperience> authorExperienceMap,
+                IPullRequestService pullRequestService
+            )
             {
                 var author = pullRequest.User.Login;
 
                 if (pullRequest.Merged)
                 {
+                    var reviews = await pullRequestService.GetPullRequsetReviews(repository.Owner, repository.Name, pullRequest.Number);
+
                     if (!authorExperienceMap.ContainsKey(author))
                     {
                         authorExperienceMap[author] = new UserExperience();
                     }
 
-                    authorExperienceMap[author].PullRequestsAuthored++;
+                    var authorExperience = authorExperienceMap[author];
 
-                    if (pullRequest.CreatedAt < authorExperienceMap[author].FirstAuthoring)
+                    foreach (var review in reviews)
                     {
-                        authorExperienceMap[author].FirstAuthoring = pullRequest.CreatedAt.UtcDateTime;
+                        if (!authorExperienceMap.ContainsKey(review.User.Login))
+                        {
+                            authorExperienceMap[review.User.Login] = new UserExperience();
+                        }
+
+                        var contributorExperience = authorExperienceMap[review.User.Login];
+
+                        if (review.State == PullRequestReviewStates.Approved)
+                        {
+                            contributorExperience.Approvals++;
+                        }
+                        else if (review.State == PullRequestReviewStates.Commented)
+                        {
+                            contributorExperience.Comments++;
+                        }
+                        else if (review.State == PullRequestReviewStates.ChangesRequested)
+                        {
+                            contributorExperience.ChangeRequests++;
+                        }
                     }
-                    if (pullRequest.CreatedAt > authorExperienceMap[author].LastAuthoring)
+
+                    authorExperience.PullRequestsAuthored++;
+
+                    if (pullRequest.CreatedAt < authorExperience.FirstAuthoring)
                     {
-                        authorExperienceMap[author].LastAuthoring = pullRequest.CreatedAt.UtcDateTime;
+                        authorExperience.FirstAuthoring = pullRequest.CreatedAt.UtcDateTime;
+                    }
+                    if (pullRequest.CreatedAt > authorExperience.LastAuthoring)
+                    {
+                        authorExperience.LastAuthoring = pullRequest.CreatedAt.UtcDateTime;
                     }
                 }
             }

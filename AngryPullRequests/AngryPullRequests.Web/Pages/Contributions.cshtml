@@ -4,14 +4,15 @@
 }
 
 <div class="container">
-    <table class="table">
+    <table class="table" id="sortTable">
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Authorings</th>
-                <th>Last Authoring On</th>
-                <th>First Authoring At</th>
-                <th>Last Authoring At</th>
+                <th>PRs merged</th>
+                <th>PRs interactions</th>
+                <th>Recently Merged On</th>
+                <th>First Merged At</th>
+                <th>Latest Merged at</th>
             </tr>
         </thead>
         <tbody>
@@ -20,6 +21,7 @@
                 foreach (var contribution in Model.Contributions!)
                 {
                     var inactive = (@DateTimeOffset.Now - @contribution.LastAuthoringAt) <= @TimeSpan.FromDays(90) ? false : true;
+                    var commentedOn = @contribution.CommentedOn + @contribution.ChangeRequests;
                     <tr>
                         <td style="display:flex;">
 
@@ -43,6 +45,7 @@
 
                         </td>
                         <td>@contribution.AuthoredPullRequests</td>
+                        <td>@commentedOn</td>
                         <td>@contribution.RecentlyMostActiveOn</td>
                         <td>@contribution.FirstAuthoringAt.ToString("dd.MM.yyyy")</td>
                         <td>@contribution.LastAuthoringAt.ToString("dd.MM.yyyy")</td>
