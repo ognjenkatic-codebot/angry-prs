@@ -1,4 +1,4 @@
-﻿using AngryPullRequests.Application.Persistence;
+using AngryPullRequests.Application.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
@@ -37,7 +37,7 @@ namespace AngryPullRequests.Application.AngryPullRequests.Contributors.Queries
 
             public async Task<List<UserRankingStats>> Handle(GetUserContributionsRankedQuery request, CancellationToken cancellationToken)
             {
-                var contributors = await dbContext.Contributors.Include(c => c.Contributions).ThenInclude(c => c.Repository).ToListAsync();
+                var contributors = await dbContext.Contributors.Include(c => c.Contributions).ThenInclude(c => c.Repository).ToListAsync(cancellationToken);
 
                 var response = new List<UserRankingStats>();
 
