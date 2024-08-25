@@ -1,4 +1,4 @@
-﻿using AngryPullRequests.Application.Github;
+using AngryPullRequests.Application.Github;
 using AngryPullRequests.Application.Persistence;
 using AngryPullRequests.Domain.Entities;
 using AngryPullRequests.Domain.Models;
@@ -7,9 +7,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,8 +20,6 @@ namespace AngryPullRequests.Application.AngryPullRequests.Contributors.Commands
             private readonly IAngryPullRequestsContext dbContext;
             private readonly IPullRequestServiceFactory pullRequestServiceFactory;
 
-            //private static readonly Dictionary<Guid, Dictionary<string, UserExperience>> authorExperienceMap = new();
-
             public Handler(IAngryPullRequestsContext dbContext, IPullRequestServiceFactory pullRequestServiceFactory)
             {
                 this.dbContext = dbContext;
@@ -32,7 +28,7 @@ namespace AngryPullRequests.Application.AngryPullRequests.Contributors.Commands
 
             public async Task Handle(IndexContributionsCommand request, CancellationToken cancellationToken)
             {
-                var repositories = await dbContext.Repositories.Include(r => r.AngryUser).ToListAsync();
+                var repositories = await dbContext.Repositories.Include(r => r.AngryUser).ToListAsync(cancellationToken);
 
                 var tasks = new List<Task<(Guid, Dictionary<string, UserExperience>)>>();
 
@@ -43,7 +39,7 @@ namespace AngryPullRequests.Application.AngryPullRequests.Contributors.Commands
 
                 var dictionaries = await Task.WhenAll(tasks);
 
-                var contributors = await dbContext.RepositoryContributors.Include(rc => rc.Repository).Include(rc => rc.Contributor).ToListAsync();
+                var contributors = await dbContext.RepositoryContributors.Include(rc => rc.Repository).Include(rc => rc.Contributor).ToListAsync(cancellationToken);
 
                 foreach (var repositoryContributions in dictionaries)
                 {
@@ -116,14 +112,11 @@ namespace AngryPullRequests.Application.AngryPullRequests.Contributors.Commands
             )
             {
                 int lastPageFetched = 1;
-                int totalPrs = 0;
                 Dictionary<string, UserExperience> authorExperienceMap = new();
                 bool goNext;
                 do
                 {
                     var pullRequests = await pullRequestService.GetPullRequests(repository.Owner, repository.Name, true, 1, 100, lastPageFetched);
-
-                    totalPrs += pullRequests.Length;
 
                     if (pullRequests.Length >= 100)
                     {
@@ -157,21 +150,19 @@ namespace AngryPullRequests.Application.AngryPullRequests.Contributors.Commands
                 {
                     var reviews = await pullRequestService.GetPullRequsetReviews(repository.Owner, repository.Name, pullRequest.Number);
 
-                    if (!authorExperienceMap.ContainsKey(author))
+                    if (!authorExperienceMap.TryGetValue(author, out var authorExperience))
                     {
-                        authorExperienceMap[author] = new UserExperience();
+                        authorExperience = new UserExperience();
+                        authorExperienceMap[author] = authorExperience;
                     }
-
-                    var authorExperience = authorExperienceMap[author];
 
                     foreach (var review in reviews)
                     {
-                        if (!authorExperienceMap.ContainsKey(review.User.Login))
+                        if (!authorExperienceMap.TryGetValue(review.User.Login, out var contributorExperience))
                         {
-                            authorExperienceMap[review.User.Login] = new UserExperience();
+                            contributorExperience = new UserExperience();
+                            authorExperienceMap[review.User.Login] = contributorExperience;
                         }
-
-                        var contributorExperience = authorExperienceMap[review.User.Login];
 
                         if (review.State == PullRequestReviewStates.Approved)
                         {
